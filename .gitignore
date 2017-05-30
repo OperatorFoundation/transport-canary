@@ -3,3 +3,4 @@
 /Packages
 /*.xcodeproj
 /.packages_lin
+/Resources/auth.json
