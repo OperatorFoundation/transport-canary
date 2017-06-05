@@ -9,10 +9,8 @@ do
   try configs.forEachEntry(closure:
   {
     config in
-
-    let serverName = config.replacingOccurrences(of: "-tcp.ovpn", with: "")
+    
     print(config)
-    print(serverName)
   })
 }
 catch
@@ -20,20 +18,6 @@ catch
   print(error)
 }
 
-
-//Keys
-do
-{
-    try keys.forEachEntry(closure:
-    {
-        (filename) in
-        print("Found 🔑 file \(filename)")
-    })
-}
-catch
-{
-    print(error)
-}
 
 
 

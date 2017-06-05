@@ -7,68 +7,128 @@
 //
 
 import PerfectLib
+import Foundation
 
 class OpenVPNController
 {
-    let currentServerIP = ""
-    let ptServerPort = ""
+    static let sharedInstance = OpenVPNController()
+    static var connectTask:Process!
+    var verbosity = 3
     
-    func shapeShifterDispatcherArguments() -> [String]?
+    let appDirectory = ""
+    let authFilePath = "Resources/auth.up"
+    let certFilePath = "Resources/keys/ca.crt"
+    let keyFilePath = "Resources/keys/Wdc.key"
+    
+    init()
     {
-        //    if let stateDirectory = createTransportStateDirectory(), let obfs4Options = getObfs4Options()
-        //    {
+        //
+    }
+    
+    func startOpenVPN(openVPNFilePath: String, configFilePath: String)
+    {
+        writeToLog(logDirectory: appDirectory, content: "******* STARTOPENVPN CALLED *******")
+        print("******* STARTOPENVPN CALLED *******")
+        //Arguments
+        let openVpnArguments = connectToOpenVPNArguments(configFilePath: configFilePath)
+        
+        _ = runOpenVpnScript(openVPNFilePath, logDirectory: configFilePath, arguments: openVpnArguments)
+        
+        writeToLog(logDirectory: appDirectory, content: "START OPEN VPN END OF FUNCTION")
+        print("START OPEN VPN END OF FUNCTION")
+    }
+    
+    func stopOpenVPN()
+    {
+        writeToLog(logDirectory: appDirectory, content: "******* STOP OpenVpn CALLED *******")
+        print("******* STOP OpenVpn CALLED *******")
+        
+        //Disconnect OpenVPN
+        if OpenVPNController.connectTask != nil
+        {
+            OpenVPNController.connectTask!.terminate()
+        }
+    }
+    
+    private func connectToOpenVPNArguments(configFilePath: String) -> [String]
+    {
         //List of arguments for Process/Task
         var processArguments: [String] = []
         
-        //TransparentTCP is our proxy mode.
-        processArguments.append("-transparent")
+        //Specify the log file path
+        processArguments.append("--log")
+        processArguments.append("\(appDirectory)/openVPNLog.txt")
         
-        //Puts Dispatcher in client mode.
-        processArguments.append("-client")
+        //Verbosity of Output
+        processArguments.append("--verb")
+        processArguments.append(String(verbosity))
         
-        //IP and Port for our PT Server
-        processArguments.append("-target")
-        processArguments.append("\(currentServerIP):\(ptServerPort)")
+        //Config File to use
+        processArguments.append("--config")
+        processArguments.append(configFilePath)
         
-        //Here is our list of transports (more than one would launch multiple proxies)
-        processArguments.append("-transports")
-        processArguments.append("obfs4")
+        //Set management options
+        processArguments.append("--management")
+        processArguments.append("127.0.0.1")
+        processArguments.append("13374")
+        processArguments.append("--management-query-passwords")
         
-        /// -bindaddr string
-        //Specify the bind address for transparent server
-        processArguments.append("-bindaddr")
-        processArguments.append("obfs4-127.0.0.1:1234")
+        //Username and Password
+        processArguments.append("--auth-user-pass")
+        processArguments.append(authFilePath)
         
-        //Paramaters needed by the specific transport being used (obfs4)
-        processArguments.append("-options")
-        //processArguments.append(obfs4Options)
+        //Cert File
+        processArguments.append("--cert")
+        processArguments.append(certFilePath)
         
-        //Creates a directory if it doesn't already exist for transports to save needed files
-        processArguments.append("-state")
-        //processArguments.append(stateDirectory)
-        
-        /// -logLevel string
-        //Log level (ERROR/WARN/INFO/DEBUG) (default "ERROR")
-        processArguments.append("-logLevel")
-        processArguments.append("DEBUG")
-        
-        //Log to TOR_PT_STATE_LOCATION/dispatcher.log
-        processArguments.append("-enableLogging")
-        
-        /// -ptversion string
-        //Specify the Pluggable Transport protocol version to use
-        //We are using Pluggable Transports version 2.0
-        processArguments.append("-ptversion")
-        processArguments.append("2")
-        
-        //TODO Listen on a port for OpenVPN Client
+        //Key File
+        processArguments.append("--key")
+        processArguments.append(keyFilePath)
         
         return processArguments
-        //    }
-        //    else
-        //    {
-        //        return nil
-        //    }
+    }
+    
+    private func runOpenVpnScript(_ path: String, logDirectory: String, arguments: [String]) -> Bool
+    {
+        writeToLog(logDirectory: appDirectory, content: "Run OpenVpn Script")
         
-    }   
+        //Creates a new Process and assigns it to the connectTask property.
+        OpenVPNController.connectTask = Process()
+        //The launchPath is the path to the executable to run.
+        OpenVPNController.connectTask.launchPath = path
+        //Arguments will pass the arguments to the executable, as though typed directly into terminal.
+        OpenVPNController.connectTask.arguments = arguments
+        
+        //Go ahead and launch the process/task
+        OpenVPNController.connectTask.launch()
+        
+        //This may be a lie :(
+        return true
+    }
+    
+    func writeToLog(logDirectory: String, content: String)
+    {
+        let timeStamp = Date()
+        let contentString = "\n\(timeStamp):\n\(content)\n"
+        let logFilePath = logDirectory + "transport-canary-Log.txt"
+        
+        if let fileHandle = FileHandle(forWritingAtPath: logFilePath)
+        {
+            //append to file
+            fileHandle.seekToEndOfFile()
+            fileHandle.write(contentString.data(using: String.Encoding.utf8)!)
+        }
+        else
+        {
+            //create new file
+            do
+            {
+                try contentString.write(toFile: logFilePath, atomically: true, encoding: String.Encoding.utf8)
+            }
+            catch
+            {
+                print("Error writing to file \(logFilePath)")
+            }
+        }
+    }
 }
