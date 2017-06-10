@@ -13,9 +13,8 @@ class OpenVPNController
 {
     static let sharedInstance = OpenVPNController()
     static var connectTask:Process!
-    var verbosity = 3
+    var verbosity = 6
     
-    let appDirectory = ""
     let authFilePath = "Resources/auth.up"
     let certFilePath = "Resources/keys/ca.crt"
     let keyFilePath = "Resources/keys/Wdc.key"
@@ -25,29 +24,50 @@ class OpenVPNController
         //
     }
     
+    func killAllOpenVPN()
+    {
+        print("******* ☠️KILLALL CALLED☠️ *******")
+        
+        let killTask = Process()
+        
+        //The launchPath is the path to the executable to run.
+        killTask.launchPath = "/usr/bin/killall"
+        //Arguments will pass the arguments to the executable, as though typed directly into terminal.
+        killTask.arguments = ["openvpn"]
+        
+        //Go ahead and launch the process/task
+        killTask.launch()
+        
+        killTask.waitUntilExit()
+        sleep(2)
+    }
+    
     func startOpenVPN(openVPNFilePath: String, configFilePath: String)
     {
-        writeToLog(logDirectory: appDirectory, content: "******* STARTOPENVPN CALLED *******")
+        //writeToLog(logDirectory: appDirectory, content: "******* STARTOPENVPN CALLED *******")
         print("******* STARTOPENVPN CALLED *******")
         //Arguments
         let openVpnArguments = connectToOpenVPNArguments(configFilePath: configFilePath)
+        //print("👀 Start OpenVPN Args:\n \(openVpnArguments.joined(separator: "\n")) 👀")
         
         _ = runOpenVpnScript(openVPNFilePath, logDirectory: configFilePath, arguments: openVpnArguments)
         
-        writeToLog(logDirectory: appDirectory, content: "START OPEN VPN END OF FUNCTION")
-        print("START OPEN VPN END OF FUNCTION")
+        sleep(3)
     }
     
     func stopOpenVPN()
     {
-        writeToLog(logDirectory: appDirectory, content: "******* STOP OpenVpn CALLED *******")
+        //writeToLog(logDirectory: appDirectory, content: "******* STOP OpenVpn CALLED *******")
         print("******* STOP OpenVpn CALLED *******")
         
         //Disconnect OpenVPN
         if OpenVPNController.connectTask != nil
         {
             OpenVPNController.connectTask!.terminate()
+            OpenVPNController.connectTask!.waitUntilExit()
         }
+        
+        killAllOpenVPN()
     }
     
     private func connectToOpenVPNArguments(configFilePath: String) -> [String]
@@ -55,9 +75,9 @@ class OpenVPNController
         //List of arguments for Process/Task
         var processArguments: [String] = []
         
-        //Specify the log file path
-        processArguments.append("--log")
-        processArguments.append("\(appDirectory)/openVPNLog.txt")
+//        //Specify the log file path
+//        processArguments.append("--log")
+//        processArguments.append("openVPNLog.txt")
         
         //Verbosity of Output
         processArguments.append("--verb")
@@ -76,21 +96,14 @@ class OpenVPNController
         //Username and Password
         processArguments.append("--auth-user-pass")
         processArguments.append(authFilePath)
-        
-        //Cert File
-        processArguments.append("--cert")
-        processArguments.append(certFilePath)
-        
-        //Key File
-        processArguments.append("--key")
-        processArguments.append(keyFilePath)
+
         
         return processArguments
     }
     
     private func runOpenVpnScript(_ path: String, logDirectory: String, arguments: [String]) -> Bool
     {
-        writeToLog(logDirectory: appDirectory, content: "Run OpenVpn Script")
+        //writeToLog(logDirectory: appDirectory, content: "Run OpenVpn Script")
         
         //Creates a new Process and assigns it to the connectTask property.
         OpenVPNController.connectTask = Process()
@@ -106,29 +119,29 @@ class OpenVPNController
         return true
     }
     
-    func writeToLog(logDirectory: String, content: String)
-    {
-        let timeStamp = Date()
-        let contentString = "\n\(timeStamp):\n\(content)\n"
-        let logFilePath = logDirectory + "transport-canary-Log.txt"
-        
-        if let fileHandle = FileHandle(forWritingAtPath: logFilePath)
-        {
-            //append to file
-            fileHandle.seekToEndOfFile()
-            fileHandle.write(contentString.data(using: String.Encoding.utf8)!)
-        }
-        else
-        {
-            //create new file
-            do
-            {
-                try contentString.write(toFile: logFilePath, atomically: true, encoding: String.Encoding.utf8)
-            }
-            catch
-            {
-                print("Error writing to file \(logFilePath)")
-            }
-        }
-    }
+//    func writeToLog(logDirectory: String, content: String)
+//    {
+//        let timeStamp = Date()
+//        let contentString = "\n\(timeStamp):\n\(content)\n"
+//        let logFilePath = logDirectory + "transport-canary-Log.txt"
+//        
+//        if let fileHandle = FileHandle(forWritingAtPath: logFilePath)
+//        {
+//            //append to file
+//            fileHandle.seekToEndOfFile()
+//            fileHandle.write(contentString.data(using: String.Encoding.utf8)!)
+//        }
+//        else
+//        {
+//            //create new file
+//            do
+//            {
+//                try contentString.write(toFile: logFilePath, atomically: true, encoding: String.Encoding.utf8)
+//            }
+//            catch
+//            {
+//                print("Error writing to file \(logFilePath)")
+//            }
+//        }
+//    }
 }
