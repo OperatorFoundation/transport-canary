@@ -14,6 +14,17 @@ class DatabaseController
     static let sharedInstance = DatabaseController()
     let postGresConnection = PGConnection()
     let dbInfo = "host=localhost dbname=canarydb"
+    let defaultQuery = "select serverName,success,testDate from testresult"
+    
+    init()
+    {
+        
+        
+        //Check if table exists and is not empty (count)
+        queryDB(statement: "SELECT COUNT(*) FROM servers")
+        
+        //If not, create and populate our server table.
+    }
     
     func connectToDB() ->Bool
     {
@@ -33,7 +44,7 @@ class DatabaseController
         }
     }
     
-    func queryDB()
+    func queryDB(statement: String)
     {
         let status = postGresConnection.connectdb(dbInfo)
         defer
@@ -45,7 +56,7 @@ class DatabaseController
             return
         }
         
-        let result = postGresConnection.exec(statement: "select serverName,success,testDate from testresult")
+        let result = postGresConnection.exec(statement: statement)
         
         processQueryResponse(result: result)
     }
@@ -55,6 +66,7 @@ class DatabaseController
         //Filler, need to research the best way to handle the dates.
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
+        //"yyyy-MM-dd HH:mm:ss-TZ"
         dateFormatter.timeZone = TimeZone.init(abbreviation: "UTC")
         
         let testDateString = dateFormatter.string(from: testDate)
@@ -112,6 +124,16 @@ class DatabaseController
         
         result.clear()
         postGresConnection.close()
+    }
+    
+    func populateServersTable()
+    {
+        insertServerInfo(<#T##serverName: String##String#>)
+    }
+    
+    func insertServerInfo(_ serverName: String)
+    {
+        
     }
     
     

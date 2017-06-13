@@ -5,11 +5,15 @@ var first = true
 let configs = Dir("Resources/config")
 let keys = Dir("Resources/keys")
 
+///sudo bin/client-cli capture obfs4 allow 1234
+
 do
 {
     //Kills all openVPN connections on the system before begining the test loop.
-    OpenVPNController.sharedInstance.killAllOpenVPN()
-    //ShapeshifterController.sharedInstance.killAllShShifter()
+    if OpenVPNController.sharedInstance != nil
+    {
+        OpenVPNController.sharedInstance!.killAllOpenVPN()
+    }
     
     var failedTests = [TestResult]()
     var serversNotTested = [String]()
@@ -70,7 +74,7 @@ do
         }
     }
     
-    DatabaseController.sharedInstance.queryDB()
+    DatabaseController.sharedInstance.queryDB(statement: DatabaseController.sharedInstance.defaultQuery)
     
     
 }

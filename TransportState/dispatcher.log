@@ -5933,3 +5933,165 @@
 2017/06/09 19:15:11 [INFO]: obfs4 - registered listener: 127.0.0.1:1234
 2017/06/09 19:15:11 [INFO]: shapeshifter-dispatcher - accepting connections
 2017/06/09 19:15:12 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/06/12 12:25:23 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/06/12 12:25:23 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/06/12 12:25:23 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/06/12 12:25:23 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/06/12 12:25:23 [INFO]: obfs4 - registered listener: 127.0.0.1:1234
+2017/06/12 12:25:23 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/06/12 12:25:24 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/06/12 12:25:29 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/06/12 12:25:29 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/06/12 12:25:29 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/06/12 12:25:29 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/06/12 12:25:29 [INFO]: obfs4 - registered listener: 127.0.0.1:1234
+2017/06/12 12:25:29 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/06/12 12:25:30 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/06/12 12:25:35 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/06/12 12:25:35 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/06/12 12:25:35 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/06/12 12:25:35 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/06/12 12:25:35 [INFO]: obfs4 - registered listener: 127.0.0.1:1234
+2017/06/12 12:25:35 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/06/12 12:25:36 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/06/12 12:25:42 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/06/12 12:25:42 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/06/12 12:25:42 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/06/12 12:25:42 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/06/12 12:25:42 [INFO]: obfs4 - registered listener: 127.0.0.1:1234
+2017/06/12 12:25:42 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/06/12 12:25:43 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/06/12 12:25:48 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/06/12 12:25:48 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/06/12 12:25:48 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/06/12 12:25:48 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/06/12 12:25:48 [INFO]: obfs4 - registered listener: 127.0.0.1:1234
+2017/06/12 12:25:48 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/06/12 12:25:49 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/06/12 12:25:54 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/06/12 12:25:54 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/06/12 12:25:54 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/06/12 12:25:54 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/06/12 12:25:54 [INFO]: obfs4 - registered listener: 127.0.0.1:1234
+2017/06/12 12:25:54 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/06/12 12:25:55 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/06/12 12:26:00 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/06/12 12:26:00 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/06/12 12:26:00 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/06/12 12:26:00 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/06/12 12:26:00 [INFO]: obfs4 - registered listener: 127.0.0.1:1234
+2017/06/12 12:26:00 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/06/12 12:26:01 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/06/12 12:26:07 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/06/12 12:26:07 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/06/12 12:26:07 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/06/12 12:26:07 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/06/12 12:26:07 [INFO]: obfs4 - registered listener: 127.0.0.1:1234
+2017/06/12 12:26:07 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/06/12 12:26:08 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/06/12 12:26:13 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/06/12 12:26:13 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/06/12 12:26:13 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/06/12 12:26:13 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/06/12 12:26:13 [INFO]: obfs4 - registered listener: 127.0.0.1:1234
+2017/06/12 12:26:13 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/06/12 12:26:14 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/06/12 12:26:19 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/06/12 12:26:19 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/06/12 12:26:19 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/06/12 12:26:19 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/06/12 12:26:19 [INFO]: obfs4 - registered listener: 127.0.0.1:1234
+2017/06/12 12:26:19 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/06/12 12:26:20 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/06/12 12:26:26 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/06/12 12:26:26 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/06/12 12:26:26 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/06/12 12:26:26 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/06/12 12:26:26 [INFO]: obfs4 - registered listener: 127.0.0.1:1234
+2017/06/12 12:26:26 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/06/12 12:26:27 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/06/12 12:26:32 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/06/12 12:26:32 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/06/12 12:26:32 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/06/12 12:26:32 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/06/12 12:26:32 [INFO]: obfs4 - registered listener: 127.0.0.1:1234
+2017/06/12 12:26:32 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/06/12 12:26:33 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/06/12 12:26:38 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/06/12 12:26:38 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/06/12 12:26:38 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/06/12 12:26:38 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/06/12 12:26:38 [INFO]: obfs4 - registered listener: 127.0.0.1:1234
+2017/06/12 12:26:38 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/06/12 12:26:39 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/06/12 12:26:44 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/06/12 12:26:44 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/06/12 12:26:44 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/06/12 12:26:44 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/06/12 12:26:44 [INFO]: obfs4 - registered listener: 127.0.0.1:1234
+2017/06/12 12:26:44 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/06/12 12:26:45 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/06/12 12:26:51 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/06/12 12:26:51 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/06/12 12:26:51 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/06/12 12:26:51 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/06/12 12:26:51 [INFO]: obfs4 - registered listener: 127.0.0.1:1234
+2017/06/12 12:26:51 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/06/12 12:26:52 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/06/12 12:26:57 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/06/12 12:26:57 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/06/12 12:26:57 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/06/12 12:26:57 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/06/12 12:26:57 [INFO]: obfs4 - registered listener: 127.0.0.1:1234
+2017/06/12 12:26:57 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/06/12 12:26:58 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/06/12 12:28:22 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/06/12 12:28:22 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/06/12 12:28:22 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/06/12 12:28:22 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/06/12 12:28:22 [INFO]: obfs4 - registered listener: 127.0.0.1:1234
+2017/06/12 12:28:22 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/06/12 12:29:13 [NOTICE]: Parent pid changed: 1 (was 3931)
+2017/06/12 12:29:13 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/06/12 12:31:15 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/06/12 12:31:15 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/06/12 12:31:15 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/06/12 12:31:15 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/06/12 12:31:15 [INFO]: obfs4 - registered listener: 127.0.0.1:1234
+2017/06/12 12:31:15 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/06/12 12:31:17 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/06/12 12:34:17 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/06/12 12:34:17 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/06/12 12:34:17 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/06/12 12:34:17 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/06/12 12:34:17 [INFO]: obfs4 - registered listener: 127.0.0.1:1234
+2017/06/12 12:34:17 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/06/12 12:34:18 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/06/12 12:44:11 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/06/12 12:44:11 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/06/12 12:44:11 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/06/12 12:44:11 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/06/12 12:44:11 [INFO]: obfs4 - registered listener: 127.0.0.1:1234
+2017/06/12 12:44:11 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/06/12 12:44:13 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/06/12 13:48:24 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/06/12 13:48:24 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/06/12 13:48:24 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/06/12 13:48:24 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/06/12 13:48:24 [INFO]: obfs4 - registered listener: 127.0.0.1:1234
+2017/06/12 13:48:24 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/06/12 13:48:25 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/06/12 13:56:07 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/06/12 13:56:07 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/06/12 13:56:07 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/06/12 13:56:07 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/06/12 13:56:07 [INFO]: obfs4 - registered listener: 127.0.0.1:1234
+2017/06/12 13:56:07 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/06/12 13:56:09 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/06/12 14:01:07 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/06/12 14:01:07 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/06/12 14:01:07 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/06/12 14:01:07 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/06/12 14:01:07 [INFO]: obfs4 - registered listener: 127.0.0.1:1234
+2017/06/12 14:01:07 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/06/12 14:01:10 [NOTICE]: shapeshifter-dispatcher - terminated

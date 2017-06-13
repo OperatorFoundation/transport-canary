@@ -13,15 +13,42 @@ class OpenVPNController
 {
     static let sharedInstance = OpenVPNController()
     static var connectTask:Process!
-    var verbosity = 6
+    static let findIPURL = URL(string: "https://api.ipify.org/?format=text")!
     
     let authFilePath = "Resources/auth.up"
     let certFilePath = "Resources/keys/ca.crt"
     let keyFilePath = "Resources/keys/Wdc.key"
+    let verbosity = 6
+    let originalIP: Data
     
-    init()
+    var lastIP: Data
+    
+    init?()
     {
-        //
+        if let fetchedIP = OpenVPNController.getCurrentIP()
+        {
+            originalIP = fetchedIP
+            lastIP = fetchedIP
+        }
+        else
+        {
+            return nil
+        }
+    }
+    
+    static func getCurrentIP() -> Data?
+    {
+        do
+        {
+            let currentIP = try Data(contentsOf: findIPURL, options: Data.ReadingOptions.uncached)
+            
+            return currentIP
+        }
+        catch
+        {
+            print("Unable to get ip address from website.")
+            return nil
+        }
     }
     
     func killAllOpenVPN()
@@ -37,22 +64,34 @@ class OpenVPNController
         
         //Go ahead and launch the process/task
         killTask.launch()
+        killTask.waitUntilExit()
+        sleep(2)
         
+        //Do it again, ovpn doesn't want to die.
+        killTask.arguments = ["-9", "openvpn"]
+        killTask.launch()
         killTask.waitUntilExit()
         sleep(2)
     }
     
-    func startOpenVPN(openVPNFilePath: String, configFilePath: String)
+    func startOpenVPN(openVPNFilePath: String, configFilePath: String) -> Bool
     {
         //writeToLog(logDirectory: appDirectory, content: "******* STARTOPENVPN CALLED *******")
         print("******* STARTOPENVPN CALLED *******")
         //Arguments
         let openVpnArguments = connectToOpenVPNArguments(configFilePath: configFilePath)
         //print("👀 Start OpenVPN Args:\n \(openVpnArguments.joined(separator: "\n")) 👀")
+
+        sleep(2)
         
-        _ = runOpenVpnScript(openVPNFilePath, logDirectory: configFilePath, arguments: openVpnArguments)
+        let connected = runOpenVpnScript(openVPNFilePath, logDirectory: configFilePath, arguments: openVpnArguments)
         
-        sleep(3)
+        if connected == false
+        {
+            stopOpenVPN()
+        }
+        
+        return connected
     }
     
     func stopOpenVPN()
@@ -68,6 +107,34 @@ class OpenVPNController
         }
         
         killAllOpenVPN()
+    }
+    
+    
+    func areWeConnected() -> Bool
+    {
+        if let currentIP = OpenVPNController.getCurrentIP()
+        {
+            let oIPString = String(data: originalIP, encoding: String.Encoding.utf8)
+            let lIPString = String(data: lastIP, encoding: String.Encoding.utf8)
+            let cIPString = String(data: currentIP, encoding: String.Encoding.utf8)
+            print("👉 Original IP: \(oIPString!)")
+            print("👉 Last IP: \(lIPString!)")
+            print("👉 Current IP: \(cIPString!)")
+            
+            if currentIP != originalIP && currentIP != lastIP
+            {
+                lastIP = currentIP
+                return true
+            }
+            
+            lastIP = currentIP
+        }
+        else
+        {
+            print("Unable to fetch current IP.")
+        }
+        
+        return false
     }
     
     private func connectToOpenVPNArguments(configFilePath: String) -> [String]
@@ -103,8 +170,6 @@ class OpenVPNController
     
     private func runOpenVpnScript(_ path: String, logDirectory: String, arguments: [String]) -> Bool
     {
-        //writeToLog(logDirectory: appDirectory, content: "Run OpenVpn Script")
-        
         //Creates a new Process and assigns it to the connectTask property.
         OpenVPNController.connectTask = Process()
         //The launchPath is the path to the executable to run.
@@ -115,8 +180,9 @@ class OpenVPNController
         //Go ahead and launch the process/task
         OpenVPNController.connectTask.launch()
         
-        //This may be a lie :(
-        return true
+        sleep(15)
+        
+        return areWeConnected()
     }
     
 //    func writeToLog(logDirectory: String, content: String)

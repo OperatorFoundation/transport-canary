@@ -27,26 +27,34 @@ class ConnectionTester
         let configPath = configDirectoryPath + "/\(configFileName)"
         
         /// OpenVPN
-        OpenVPNController.sharedInstance.startOpenVPN(openVPNFilePath: openVPNExecutablePath, configFilePath: configPath)
+        if OpenVPNController.sharedInstance != nil
+        {
+            let connectedToOVPN = OpenVPNController.sharedInstance!.startOpenVPN(openVPNFilePath: openVPNExecutablePath, configFilePath: configPath)
+            
+            if connectedToOVPN
+            {
+                ///ShapeShifter
+                ShapeshifterController.sharedInstance.launchShapeshifterClient()
+                
+                sleep(1)
+                
+                ///Connection Test
+                let connectionTest = ConnectionTest()
+                let success = connectionTest.run()
+                
+                ///Generate Test Result
+                
+                let result = TestResult.init(serverName: serverName, success: success)
+                
+                ///Cleanup
+                ShapeshifterController.sharedInstance.stopShapeshifterClient()
+                OpenVPNController.sharedInstance!.stopOpenVPN()
+                
+                return result
+            }
+        }
         
-        ///ShapeShifter
-        ShapeshifterController.sharedInstance.launchShapeshifterClient()
-        
-        sleep(1)
-        
-        ///Connection Test
-        let connectionTest = ConnectionTest()
-        let success = connectionTest.run()
-        
-        ///Generate Test Result
-        
-        let result = TestResult.init(serverName: serverName, success: success)
-        
-        ///Cleanup
-        ShapeshifterController.sharedInstance.stopShapeshifterClient()
-        OpenVPNController.sharedInstance.stopOpenVPN()
-        
-        return result
+        return nil
     }
 
 }
