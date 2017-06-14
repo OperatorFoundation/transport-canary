@@ -1,0 +1,6 @@
+Thu Jun  8 13:47:16 2017 OpenVPN 2.3.12 x86_64-apple-darwin [SSL (OpenSSL)] [LZO] [PKCS11] [MH] [IPv6] built on Oct  9 2016
+Thu Jun  8 13:47:16 2017 library versions: OpenSSL 1.0.2j  26 Sep 2016, LZO 2.09
+Thu Jun  8 13:47:16 2017 WARNING: file 'Resources/auth.up' is group or others accessible
+Thu Jun  8 13:47:16 2017 WARNING: No server certificate verification method has been enabled.  See http://openvpn.net/howto.html#mitm for more info.
+Thu Jun  8 13:47:16 2017 SIGUSR1[soft,private-key-password-failure] received, process restarting
+Thu Jun  8 13:47:16 2017 SIGTERM[hard,init_instance] received, process exiting
