@@ -18,6 +18,7 @@ class OpenVPNController
     let authFilePath = "Resources/auth.up"
     let certFilePath = "Resources/keys/ca.crt"
     let keyFilePath = "Resources/keys/Wdc.key"
+    let fixInternetPath = "Resources/fixInternet.sh"
     let verbosity = 6
     let originalIP: Data
     
@@ -53,7 +54,7 @@ class OpenVPNController
     
     func killAllOpenVPN()
     {
-        print("******* ☠️KILLALL CALLED☠️ *******")
+        print("******* ☠️ KILLALL CALLED ☠️ *******")
         
         let killTask = Process()
         
@@ -68,10 +69,24 @@ class OpenVPNController
         sleep(2)
         
         //Do it again, ovpn doesn't want to die.
-        killTask.arguments = ["-9", "openvpn"]
-        killTask.launch()
-        killTask.waitUntilExit()
+
+        let killAgain = Process()
+        killAgain.launchPath = "/usr/bin/killall"
+        killAgain.arguments = ["-9", "openvpn"]
+        killAgain.launch()
+        killAgain.waitUntilExit()
         sleep(2)
+        
+        //fixTheInternet()
+    }
+    
+    func fixTheInternet()
+    {
+        let fixTask = Process()
+        fixTask.launchPath = fixInternetPath
+        fixTask.launch()
+        print("Attempted to fix the internet!")
+        fixTask.waitUntilExit()
     }
     
     func startOpenVPN(openVPNFilePath: String, configFilePath: String) -> Bool
@@ -106,7 +121,7 @@ class OpenVPNController
             OpenVPNController.connectTask!.waitUntilExit()
         }
         
-        killAllOpenVPN()
+        self.killAllOpenVPN()
     }
     
     
@@ -170,8 +185,13 @@ class OpenVPNController
     
     private func runOpenVpnScript(_ path: String, logDirectory: String, arguments: [String]) -> Bool
     {
+        let outputPipe = Pipe()
         //Creates a new Process and assigns it to the connectTask property.
         OpenVPNController.connectTask = Process()
+        
+        OpenVPNController.connectTask.standardOutput = outputPipe
+        //Mon Jun 26 16:07:55 2017 Initialization Sequence Completed
+        
         //The launchPath is the path to the executable to run.
         OpenVPNController.connectTask.launchPath = path
         //Arguments will pass the arguments to the executable, as though typed directly into terminal.
@@ -180,7 +200,7 @@ class OpenVPNController
         //Go ahead and launch the process/task
         OpenVPNController.connectTask.launch()
         
-        sleep(15)
+        sleep(13)
         
         return areWeConnected()
     }

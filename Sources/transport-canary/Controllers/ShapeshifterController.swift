@@ -17,9 +17,9 @@ class ShapeshifterController
     let stateDirectoryPath = "TransportState"
     static let sharedInstance = ShapeshifterController()
     
-    func launchShapeshifterClient()
+    func launchShapeshifterClient(forTransport transport: String)
     {
-        if let arguments = shapeshifterArguments()
+        if let arguments = shapeshifterArguments(forTransport: transport)
         {
             //print("👀 LaunchShapeShifterDispatcher Args:\n \(arguments.joined(separator: "\n")) 👀")
             
@@ -57,7 +57,7 @@ class ShapeshifterController
     
     func killAllShShifter()
     {
-        print("******* ☠️KILLALL ShShifters CALLED☠️ *******")
+        print("******* ☠️ KILLALL ShShifters CALLED ☠️ *******")
         
         let killTask = Process()
         
@@ -72,10 +72,26 @@ class ShapeshifterController
         killTask.waitUntilExit()
     }
     
-    func shapeshifterArguments() -> [String]?
+    func shapeshifterArguments(forTransport transport: String) -> [String]?
     {
         if let stateDirectory = createTransportStateDirectory(), let obfs4Options = getObfs4Options()
         {
+            var options: String?
+            
+            if transport == meek
+            {
+                options = getMeekOptions()
+            }
+            else if transport == obfs4
+            {
+                options = getObfs4Options()
+            }
+            
+            if options == nil
+            {
+                return nil
+            }
+            
             do
             {
                 let serverIP = try String(contentsOfFile: serverIPFilePath, encoding: String.Encoding.ascii)
@@ -95,7 +111,7 @@ class ShapeshifterController
                 
                 //Here is our list of transports (more than one would launch multiple proxies)
                 processArguments.append("-transports")
-                processArguments.append("obfs4")
+                processArguments.append(transport)
                 
                 /// -bindaddr string
                 //Specify the bind address for transparent server
@@ -140,6 +156,12 @@ class ShapeshifterController
             return nil
         }
         
+    }
+    
+    func getMeekOptions() -> String?
+    {
+        //TODO: Configure options for Meek Transport
+        return "no options set"
     }
     
     func getObfs4Options() -> String?

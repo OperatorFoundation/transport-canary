@@ -11,5 +11,8 @@ import Foundation
 struct TestResult
 {
     var serverName: String
+    var testDate: Date
+    var transport: String
     var success = false
 }
+

@@ -21,11 +21,11 @@ class ConnectionTester
         self.serverName = configFileName.replacingOccurrences(of: "-tcp.ovpn", with: "")
     }
     
-    func runTest() -> TestResult?
+    func runTest(forTransport transport: String) -> TestResult?
     {        
         //Config File
         let configPath = configDirectoryPath + "/\(configFileName)"
-        
+        var result: TestResult?
         /// OpenVPN
         if OpenVPNController.sharedInstance != nil
         {
@@ -34,7 +34,7 @@ class ConnectionTester
             if connectedToOVPN
             {
                 ///ShapeShifter
-                ShapeshifterController.sharedInstance.launchShapeshifterClient()
+                ShapeshifterController.sharedInstance.launchShapeshifterClient(forTransport: transport)
                 
                 sleep(1)
                 
@@ -43,18 +43,22 @@ class ConnectionTester
                 let success = connectionTest.run()
                 
                 ///Generate Test Result
-                
-                let result = TestResult.init(serverName: serverName, success: success)
-                
-                ///Cleanup
-                ShapeshifterController.sharedInstance.stopShapeshifterClient()
-                OpenVPNController.sharedInstance!.stopOpenVPN()
-                
-                return result
+                result = TestResult.init(serverName: serverName, testDate: Date(), transport: transport, success: success)
+            }
+            else
+            {
+                print("Failed to connect to openVPN")
             }
         }
         
-        return nil
+        ///Cleanup
+        ShapeshifterController.sharedInstance.stopShapeshifterClient()
+        OpenVPNController.sharedInstance!.stopOpenVPN()
+        OpenVPNController.sharedInstance!.fixTheInternet()
+        
+        sleep(5)
+        
+        return result
     }
 
 }
@@ -85,25 +89,19 @@ class ConnectionTest
                 
                 if observedData == controlData
                 {
-                    print("💕🐥It works!🐥💕")
-//                    let observedString = String(data: observedData, encoding: String.Encoding.utf8)
-//                    print("Observed Data: \(observedString!)")
-//                    
-//                    let controlString = String(data: controlData!, encoding: String.Encoding.utf8)
-//                    print("Control Data: \(controlString!)")
-                    
+                    print("💕 🐥 It works! 🐥 💕")
                     return true
                 }
                 else
                 {
-                    print("We connected but the data did not match.🖤")
+                    print("We connected but the data did not match. 🖤")
                     return false
                 }
                 
             }
             catch
             {
-                print("We could not connect.💔")
+                print("We could not connect. 💔")
                 return false
             }
         }
