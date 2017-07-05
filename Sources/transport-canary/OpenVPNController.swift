@@ -24,6 +24,15 @@ class OpenVPNController
     
     var lastIP: Data
     
+    //Sockety Goodness Needed for connecting to management server
+    //Allows us to monitor the state of our connection through OpenVPN
+    let session = URLSession(configuration: .default)
+    let hostIPString = "127.0.0.1"
+    let port = 13374
+    var task: URLSessionStreamTask? = nil
+    var socketRunning = false
+    var status = String()
+    
     init?()
     {
         if let fetchedIP = OpenVPNController.getCurrentIP()
@@ -89,7 +98,7 @@ class OpenVPNController
         fixTask.waitUntilExit()
     }
     
-    func startOpenVPN(openVPNFilePath: String, configFilePath: String) -> Bool
+    func startOpenVPN(openVPNFilePath: String, configFilePath: String, completion: @escaping(_ isConnected: Bool) -> Void)
     {
         //writeToLog(logDirectory: appDirectory, content: "******* STARTOPENVPN CALLED *******")
         print("******* STARTOPENVPN CALLED *******")
@@ -99,14 +108,22 @@ class OpenVPNController
 
         sleep(2)
         
-        let connected = runOpenVpnScript(openVPNFilePath, logDirectory: configFilePath, arguments: openVpnArguments)
+        runOpenVpnScript(openVPNFilePath, logDirectory: configFilePath, arguments: openVpnArguments)
         
-        if connected == false
+        connectToManagement
         {
-            stopOpenVPN()
+            (connected) in
+            
+            if connected == true
+            {
+                completion(self.areWeConnected())
+            }
+            else
+            {
+                self.stopOpenVPN()
+                completion(false)
+            }
         }
-        
-        return connected
     }
     
     func stopOpenVPN()
@@ -122,8 +139,8 @@ class OpenVPNController
         }
         
         self.killAllOpenVPN()
+        disconnectFromManagement()
     }
-    
     
     func areWeConnected() -> Bool
     {
@@ -183,7 +200,7 @@ class OpenVPNController
         return processArguments
     }
     
-    private func runOpenVpnScript(_ path: String, logDirectory: String, arguments: [String]) -> Bool
+    private func runOpenVpnScript(_ path: String, logDirectory: String, arguments: [String])
     {
         let outputPipe = Pipe()
         //Creates a new Process and assigns it to the connectTask property.
@@ -199,10 +216,114 @@ class OpenVPNController
         
         //Go ahead and launch the process/task
         OpenVPNController.connectTask.launch()
+    }
+    
+    func connectToManagement(completion: @escaping(_ isConnected: Bool) -> Void)
+    {
+        task = session.streamTask(withHostName: hostIPString, port: port)
+        task?.resume()
+        socketRunning = true
+    
+        status = ""
+
+        let requestString = "state\nstate on\n"
         
-        sleep(13)
+        if let requestData = requestString.data(using: .utf8)
+        {
+            task?.write(requestData, timeout: 10, completionHandler:
+            {
+                (maybeError) in
+                
+                if let error = maybeError
+                {
+                    print("Error requesting state from management server: \(error.localizedDescription)")
+                }
+                
+                //task?.closeWrite()
+                self.readManagementData(completion: completion)
+            })
+        }
+    }
+    
+    func readManagementData(completion: @escaping(_ isConnected: Bool) -> Void)
+    {
+        self.task?.readData(ofMinLength: 1, maxLength: 4096, timeout: 10, completionHandler:
+            {
+                (maybeData, endOF, maybeError) in
+                
+                if let error = maybeError
+                {
+                    print("Error reading state from management server: \(error.localizedDescription)")
+                    completion(false)
+                    return
+                }
+                
+                if let data = maybeData
+                {
+                    var responseString = ""
+                    responseString.append(String(bytes: data, encoding: .ascii)!)
+                    
+                    while responseString.contains("\r\n")
+                    {
+                        let arrayOfLines = responseString.components(separatedBy: "\r\n")
+                        var firstLine = arrayOfLines[0]
+                        firstLine.append("\r\n")
+                        if let range = responseString.range(of: firstLine)
+                        {
+                            responseString.removeSubrange(range)
+                        }
+                        print("FirstLine: \(firstLine)")
+                        print("responseString: \(responseString)")
+                        
+                        if firstLine .contains(",")
+                        {
+                            let arrayOfComponents = firstLine.components(separatedBy: ",")
+                            let statusString = arrayOfComponents[1]
+                            print("Status: \(statusString)")
+                            
+                            switch statusString
+                            {
+                            case "CONNECTED", "TCP_CONNECT":
+                                //Woohoo we connected, update the UI
+                                completion(true)
+                                return
+                            default:
+                                self.readManagementData(completion: completion)
+                            }
+                        }
+                        else
+                        {
+                            self.readManagementData(completion: completion)
+                        }
+                    }
+                    
+                    if endOF == true
+                    {
+                        completion(false)
+                        return
+                    }
+                }
+                else if endOF == true
+                {
+                    completion(false)
+                    return
+                }
+                else
+                {
+                    print("Data from management server read request was nil.")
+                }
+        })
         
-        return areWeConnected()
+    }
+    
+    func disconnectFromManagement()
+    {
+        if task != nil
+        {
+            task?.closeWrite()
+            task?.closeRead()
+        }
+        socketRunning = false
     }
     
 //    func writeToLog(logDirectory: String, content: String)
@@ -210,7 +331,7 @@ class OpenVPNController
 //        let timeStamp = Date()
 //        let contentString = "\n\(timeStamp):\n\(content)\n"
 //        let logFilePath = logDirectory + "transport-canary-Log.txt"
-//        
+//
 //        if let fileHandle = FileHandle(forWritingAtPath: logFilePath)
 //        {
 //            //append to file

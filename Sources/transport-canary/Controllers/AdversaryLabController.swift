@@ -12,35 +12,64 @@ import Foundation
 class AdversaryLabController
 {
     static let sharedInstance = AdversaryLabController()
-    private var launchTask: Process?
+    private var clientLaunchTask: Process?
+    private var serverLaunchTask: Process?
     
     func launchAdversaryLab(forTransport transport: String)
     {
         let arguments = ["capture", transport, "allow", "1234"]
-        if launchTask == nil
+        if clientLaunchTask == nil
         {
             //Creates a new Process and assigns it to the launchTask property.
-            launchTask = Process()
+            clientLaunchTask = Process()
         }
         else
         {
-            launchTask!.terminate()
-            launchTask = Process()
+            clientLaunchTask!.terminate()
+            clientLaunchTask = Process()
         }
         
         //The launchPath is the path to the executable to run.
-        launchTask!.launchPath = "Resources/client-cli"
-        launchTask!.arguments = arguments
-        launchTask!.launch()
+        clientLaunchTask!.launchPath = "Resources/client-cli"
+        clientLaunchTask!.arguments = arguments
+        clientLaunchTask!.launch()
     }
     
     func stopAdversaryLab()
     {
-        if launchTask != nil
+        if clientLaunchTask != nil
         {
-            launchTask?.terminate()
-            launchTask?.waitUntilExit()
-            launchTask = nil
+            clientLaunchTask?.terminate()
+            clientLaunchTask?.waitUntilExit()
+            clientLaunchTask = nil
+        }
+    }
+    
+    func launchAdversaryLabServer()
+    {
+        if serverLaunchTask == nil
+        {
+            //Creates a new Process and assigns it to the launchTask property.
+            serverLaunchTask = Process()
+        }
+        else
+        {
+            serverLaunchTask!.terminate()
+            serverLaunchTask = Process()
+        }
+        
+        //The launchPath is the path to the executable to run.
+        serverLaunchTask!.launchPath = "Resources/AdversaryLab"
+        serverLaunchTask!.launch()
+    }
+    
+    func stopAdversaryLabServer()
+    {
+        if serverLaunchTask != nil
+        {
+            serverLaunchTask?.terminate()
+            serverLaunchTask?.waitUntilExit()
+            serverLaunchTask = nil
         }
     }
 

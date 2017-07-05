@@ -80,16 +80,18 @@ class OoniNewReportRequest
     var probeIP: String?
     //(optional) `string` the IP Address of the ooniprobe client. When the test requires a test_helper the probe should inform oonib of it's IP address. We need to know this since we are not sure if the probe is accessing the report collector via Tor or not.
     
-    init(probeASN: String, probeCountryCode: String, testName: String, testVersion: String, testStartTime: String, inputHashes: String?, testHelper: String?, probeIP: String?)
+    init(probeASN: String, probeCountryCode: String, testName: String, testVersion: String, testStartTime: String)
     {
         self.probeASN = probeASN
         self.probeCC = probeCountryCode
         self.testName = testName
         self.testVersion = testVersion
         self.testStartTime = testStartTime
-        self.inputHashes = inputHashes
-        self.testHelper = testHelper
-        self.probeIP = probeIP
+        
+        ///These are optional values that we are not currently using
+        self.inputHashes = nil
+        self.testHelper = nil
+        self.probeIP = nil
     }
     
     func createRequestDictionary() -> Dictionary <String, Any>
@@ -104,21 +106,6 @@ class OoniNewReportRequest
                              testStartTimeKey: testStartTime,
                              formatKey: format
                              ]
-        
-        if inputHashes != nil
-        {
-            reqDictionary[inputHashesKey] = inputHashes
-        }
-        
-        if testHelper != nil
-        {
-            reqDictionary[testHelperKey] = testHelper
-        }
-        
-        if probeIP != nil
-        {
-            reqDictionary[probeIPKey] = probeIP
-        }
         
         return reqDictionary
     }
