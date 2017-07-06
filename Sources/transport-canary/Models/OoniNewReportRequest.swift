@@ -96,7 +96,7 @@ class OoniNewReportRequest
     
     func createRequestDictionary() -> Dictionary <String, Any>
     {
-        var reqDictionary = [softwareNameKey: softwareName,
+        let reqDictionary = [softwareNameKey: softwareName,
                              softwareVersionKey: softwareVersion,
                              probeASNKey: probeASN,
                              probeCCKey: probeCC,
