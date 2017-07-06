@@ -29,7 +29,7 @@ class OpenVPNController
     let session = URLSession(configuration: .default)
     let hostIPString = "127.0.0.1"
     let port = 13374
-    var task: URLSessionStreamTask? = nil
+    var maybeTask: URLSessionStreamTask? = nil
     var socketRunning = false
     var status = String()
     
@@ -98,7 +98,7 @@ class OpenVPNController
         fixTask.waitUntilExit()
     }
     
-    func startOpenVPN(openVPNFilePath: String, configFilePath: String, completion: @escaping(_ isConnected: Bool) -> Void)
+    func startOpenVPN(openVPNFilePath: String, configFilePath: String) -> Bool
     {
         //writeToLog(logDirectory: appDirectory, content: "******* STARTOPENVPN CALLED *******")
         print("******* STARTOPENVPN CALLED *******")
@@ -110,20 +110,13 @@ class OpenVPNController
         
         runOpenVpnScript(openVPNFilePath, logDirectory: configFilePath, arguments: openVpnArguments)
         
-        connectToManagement
+        let connected = connectToManagement() && self.areWeConnected()
+        if !connected
         {
-            (connected) in
-            
-            if connected == true
-            {
-                completion(self.areWeConnected())
-            }
-            else
-            {
-                self.stopOpenVPN()
-                completion(false)
-            }
+            self.stopOpenVPN()
         }
+        
+        return connected
     }
     
     func stopOpenVPN()
@@ -218,112 +211,61 @@ class OpenVPNController
         OpenVPNController.connectTask.launch()
     }
     
-    func connectToManagement(completion: @escaping(_ isConnected: Bool) -> Void)
+    func connectToManagement() -> Bool
     {
-        task = session.streamTask(withHostName: hostIPString, port: port)
-        task?.resume()
-        socketRunning = true
-    
-        status = ""
-
+        maybeTask = SyncSocket.connect(host: hostIPString, port: port)
+        guard let task = maybeTask else
+        {
+            return false
+        }
+        
         let requestString = "state\nstate on\n"
         
-        if let requestData = requestString.data(using: .utf8)
+        let maybeSendError = task.send(requestString)
+        if let sendError = maybeSendError
         {
-            task?.write(requestData, timeout: 10, completionHandler:
-            {
-                (maybeError) in
-                
-                if let error = maybeError
-                {
-                    print("Error requesting state from management server: \(error.localizedDescription)")
-                }
-                
-                //task?.closeWrite()
-                self.readManagementData(completion: completion)
-            })
+            print("Error requesting state from management server: \(sendError.localizedDescription)")
         }
-    }
-    
-    func readManagementData(completion: @escaping(_ isConnected: Bool) -> Void)
-    {
-        self.task?.readData(ofMinLength: 1, maxLength: 4096, timeout: 10, completionHandler:
-            {
-                (maybeData, endOF, maybeError) in
-                
-                if let error = maybeError
-                {
-                    print("Error reading state from management server: \(error.localizedDescription)")
-                    completion(false)
-                    return
-                }
-                
-                if let data = maybeData
-                {
-                    var responseString = ""
-                    responseString.append(String(bytes: data, encoding: .ascii)!)
-                    
-                    while responseString.contains("\r\n")
-                    {
-                        let arrayOfLines = responseString.components(separatedBy: "\r\n")
-                        var firstLine = arrayOfLines[0]
-                        firstLine.append("\r\n")
-                        if let range = responseString.range(of: firstLine)
-                        {
-                            responseString.removeSubrange(range)
-                        }
-                        print("FirstLine: \(firstLine)")
-                        print("responseString: \(responseString)")
-                        
-                        if firstLine .contains(",")
-                        {
-                            let arrayOfComponents = firstLine.components(separatedBy: ",")
-                            let statusString = arrayOfComponents[1]
-                            print("Status: \(statusString)")
-                            
-                            switch statusString
-                            {
-                            case "CONNECTED", "TCP_CONNECT":
-                                //Woohoo we connected, update the UI
-                                completion(true)
-                                return
-                            default:
-                                self.readManagementData(completion: completion)
-                            }
-                        }
-                        else
-                        {
-                            self.readManagementData(completion: completion)
-                        }
-                    }
-                    
-                    if endOF == true
-                    {
-                        completion(false)
-                        return
-                    }
-                }
-                else if endOF == true
-                {
-                    completion(false)
-                    return
-                }
-                else
-                {
-                    print("Data from management server read request was nil.")
-                }
-        })
+
+        var isConnected = false
         
+        var maybePrefix: String?
+        var eof: Bool = false
+        var maybeReadError: Error?
+        var maybeRest: String?
+
+        while !isConnected && !eof
+        {
+            (maybePrefix, eof, maybeReadError, maybeRest) = task.readUntil("\r\n", maybeRest)
+
+            guard maybeReadError == nil else
+            {
+                print("Error reading state from management server: \(maybeReadError!.localizedDescription)")
+                return false
+            }
+            
+            if let prefix = maybePrefix
+            {
+                let (maybeStatusString, _) = prefix.slice(",")
+                if let statusString = maybeStatusString
+                {
+                    if statusString == "CONNECTED"
+                    {
+                        isConnected = true
+                    }
+                }
+            }
+        }
+
+        return isConnected
     }
     
     func disconnectFromManagement()
     {
-        if task != nil
+        if let task = maybeTask
         {
-            task?.closeWrite()
-            task?.closeRead()
+            task.close()
         }
-        socketRunning = false
     }
     
 //    func writeToLog(logDirectory: String, content: String)

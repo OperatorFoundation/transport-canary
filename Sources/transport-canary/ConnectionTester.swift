@@ -29,24 +29,7 @@ class ConnectionTester
         /// OpenVPN
         if OpenVPNController.sharedInstance != nil
         {
-            var connectedToOVPN = false
-            let operationQueue = OperationQueue()
-            let operation = BlockOperation(block:
-            {
-                let dispatchGroup = DispatchGroup()
-                dispatchGroup.enter()
-                OpenVPNController.sharedInstance!.startOpenVPN(openVPNFilePath: self.openVPNExecutablePath, configFilePath: configPath, completion:
-                {
-                    (isConnected) in
-                    
-                    connectedToOVPN = isConnected
-                    dispatchGroup.leave()
-                })
-                
-                dispatchGroup.wait()
-            })
-            
-            operationQueue.addOperations([operation], waitUntilFinished: true)
+            let connectedToOVPN = OpenVPNController.sharedInstance!.startOpenVPN(openVPNFilePath: self.openVPNExecutablePath, configFilePath: configPath)
             
             if connectedToOVPN
             {
