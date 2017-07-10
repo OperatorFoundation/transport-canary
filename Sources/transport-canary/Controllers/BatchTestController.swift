@@ -21,7 +21,7 @@ class BatchTestController
             //Kills all openVPN connections on the system before begining the test loop.
             if OpenVPNController.sharedInstance != nil
             {
-                OpenVPNController.sharedInstance!.killAllOpenVPN()
+               killAll(processToKill: "openvpn")
             }
             
             var failedTests = [TestResult]()

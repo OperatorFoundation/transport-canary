@@ -26,10 +26,11 @@ class OpenVPNController
     
     //Sockety Goodness Needed for connecting to management server
     //Allows us to monitor the state of our connection through OpenVPN
+    
     let session = URLSession(configuration: .default)
     let hostIPString = "127.0.0.1"
     let port = 13374
-    var maybeTask: URLSessionStreamTask? = nil
+    var maybeSyncSocket: SyncSocket? = nil
     var socketRunning = false
     var status = String()
     
@@ -61,34 +62,6 @@ class OpenVPNController
         }
     }
     
-    func killAllOpenVPN()
-    {
-        print("******* ☠️ KILLALL CALLED ☠️ *******")
-        
-        let killTask = Process()
-        
-        //The launchPath is the path to the executable to run.
-        killTask.launchPath = "/usr/bin/killall"
-        //Arguments will pass the arguments to the executable, as though typed directly into terminal.
-        killTask.arguments = ["openvpn"]
-        
-        //Go ahead and launch the process/task
-        killTask.launch()
-        killTask.waitUntilExit()
-        sleep(2)
-        
-        //Do it again, ovpn doesn't want to die.
-
-        let killAgain = Process()
-        killAgain.launchPath = "/usr/bin/killall"
-        killAgain.arguments = ["-9", "openvpn"]
-        killAgain.launch()
-        killAgain.waitUntilExit()
-        sleep(2)
-        
-        //fixTheInternet()
-    }
-    
     func fixTheInternet()
     {
         let fixTask = Process()
@@ -102,13 +75,12 @@ class OpenVPNController
     {
         //writeToLog(logDirectory: appDirectory, content: "******* STARTOPENVPN CALLED *******")
         print("******* STARTOPENVPN CALLED *******")
+        
         //Arguments
         let openVpnArguments = connectToOpenVPNArguments(configFilePath: configFilePath)
-        //print("👀 Start OpenVPN Args:\n \(openVpnArguments.joined(separator: "\n")) 👀")
 
-        sleep(2)
-        
         runOpenVpnScript(openVPNFilePath, logDirectory: configFilePath, arguments: openVpnArguments)
+        sleep(2)
         
         let connected = connectToManagement() && self.areWeConnected()
         if !connected
@@ -121,7 +93,6 @@ class OpenVPNController
     
     func stopOpenVPN()
     {
-        //writeToLog(logDirectory: appDirectory, content: "******* STOP OpenVpn CALLED *******")
         print("******* STOP OpenVpn CALLED *******")
         
         //Disconnect OpenVPN
@@ -131,7 +102,7 @@ class OpenVPNController
             OpenVPNController.connectTask!.waitUntilExit()
         }
         
-        self.killAllOpenVPN()
+        killAll(processToKill: "openvpn")
         disconnectFromManagement()
     }
     
@@ -213,15 +184,14 @@ class OpenVPNController
     
     func connectToManagement() -> Bool
     {
-        maybeTask = SyncSocket.connect(host: hostIPString, port: port)
-        guard let task = maybeTask else
+        maybeSyncSocket = SyncSocket.connect(host: hostIPString, port: port)
+        guard let syncSocket = maybeSyncSocket else
         {
             return false
         }
         
         let requestString = "state\nstate on\n"
-        
-        let maybeSendError = task.send(requestString)
+        let maybeSendError = syncSocket.send(requestString)
         if let sendError = maybeSendError
         {
             print("Error requesting state from management server: \(sendError.localizedDescription)")
@@ -236,8 +206,8 @@ class OpenVPNController
 
         while !isConnected && !eof
         {
-            (maybePrefix, eof, maybeReadError, maybeRest) = task.readUntil("\r\n", maybeRest)
-
+            (maybePrefix, eof, maybeReadError, maybeRest) = syncSocket.readUntil("\r\n", maybeRest)
+            
             guard maybeReadError == nil else
             {
                 print("Error reading state from management server: \(maybeReadError!.localizedDescription)")
@@ -246,12 +216,20 @@ class OpenVPNController
             
             if let prefix = maybePrefix
             {
-                let (maybeStatusString, _) = prefix.slice(",")
+                let (_, maybeRemainingString) = prefix.slice(",")
+                let (maybeStatusString, _) = maybeRemainingString.slice(",")
+                
                 if let statusString = maybeStatusString
                 {
                     if statusString == "CONNECTED"
                     {
                         isConnected = true
+                    }
+                    else if statusString == "RECONNECTING"
+                    {
+                        isConnected = false
+                        print("Giving up on connecting to OpenVPN, received RECONNECTING status.")
+                        return isConnected
                     }
                 }
             }
@@ -262,35 +240,10 @@ class OpenVPNController
     
     func disconnectFromManagement()
     {
-        if let task = maybeTask
+        if let task = maybeSyncSocket
         {
             task.close()
         }
     }
-    
-//    func writeToLog(logDirectory: String, content: String)
-//    {
-//        let timeStamp = Date()
-//        let contentString = "\n\(timeStamp):\n\(content)\n"
-//        let logFilePath = logDirectory + "transport-canary-Log.txt"
-//
-//        if let fileHandle = FileHandle(forWritingAtPath: logFilePath)
-//        {
-//            //append to file
-//            fileHandle.seekToEndOfFile()
-//            fileHandle.write(contentString.data(using: String.Encoding.utf8)!)
-//        }
-//        else
-//        {
-//            //create new file
-//            do
-//            {
-//                try contentString.write(toFile: logFilePath, atomically: true, encoding: String.Encoding.utf8)
-//            }
-//            catch
-//            {
-//                print("Error writing to file \(logFilePath)")
-//            }
-//        }
-//    }
+
 }

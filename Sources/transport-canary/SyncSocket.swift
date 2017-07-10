@@ -16,17 +16,22 @@ enum SyncSocketError: Error
 
 struct SyncSocket
 {
-    static func connect(host: String, port: Int) -> URLSessionStreamTask?
+    var sessionTask: URLSessionStreamTask
+    
+    init(sessionTask: URLSessionStreamTask)
+    {
+        self.sessionTask = sessionTask
+    }
+    
+    static func connect(host: String, port: Int) -> SyncSocket?
     {
         let session = URLSession(configuration: .default)
         let task = session.streamTask(withHostName: host, port: port)
         task.resume()
-        return task
+        let syncSocket = SyncSocket(sessionTask: task)
+        return syncSocket
     }
-}
-
-extension URLSessionStreamTask
-{
+    
     func send(data: Data) -> Error?
     {
         var resultError: Error?
@@ -37,12 +42,12 @@ extension URLSessionStreamTask
             let dispatchGroup = DispatchGroup()
             dispatchGroup.enter()
             
-            self.write(data, timeout: 10, completionHandler:
-            {
-                (maybeError) in
-                
-                resultError = maybeError
-                dispatchGroup.leave()
+            self.sessionTask.write(data, timeout: 10, completionHandler:
+                {
+                    (maybeError) in
+                    
+                    resultError = maybeError
+                    dispatchGroup.leave()
             })
             
             dispatchGroup.wait()
@@ -64,16 +69,16 @@ extension URLSessionStreamTask
         {
             let dispatchGroup = DispatchGroup()
             dispatchGroup.enter()
-
-            self.readData(ofMinLength: 1, maxLength: 4096, timeout: 10, completionHandler:
-            {
-                (maybeData, endOF, maybeError) in
-                
-                resultData=maybeData
-                resultEof=endOF
-                resultError=maybeError
-                
-                dispatchGroup.leave()
+            
+            self.sessionTask.readData(ofMinLength: 1, maxLength: 4096, timeout: 10, completionHandler:
+                {
+                    (maybeData, endOF, maybeError) in
+                    
+                    resultData=maybeData
+                    resultEof=endOF
+                    resultError=maybeError
+                    
+                    dispatchGroup.leave()
             })
             
             dispatchGroup.wait()
@@ -123,8 +128,8 @@ extension URLSessionStreamTask
     
     func close()
     {
-        self.closeRead()
-        self.closeWrite()
+        self.sessionTask.closeRead()
+        self.sessionTask.closeWrite()
     }
     
     func readUntil(_ delim: String, _ maybeRest: String?) -> (String?, Bool, Error?, String?)
@@ -143,7 +148,7 @@ extension URLSessionStreamTask
         var maybeString: String?
         var eof: Bool = false
         var maybeError: Error?
-
+        
         var prefix: String?
         
         while prefix == nil && !eof
@@ -168,14 +173,15 @@ extension URLSessionStreamTask
         
         if prefix == nil
         {
-            return (prefix, eof, nil, buffer)
-        }
-        else
-        {
             // Must be an EOF
             return (nil, eof, nil, buffer)
         }
+        else
+        {
+            return (prefix, eof, nil, buffer)
+        }
     }
+    
 }
 
 extension String

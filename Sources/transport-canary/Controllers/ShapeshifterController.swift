@@ -14,6 +14,7 @@ class ShapeshifterController
     let ptServerPort = "1234"
     let serverIPFilePath = "Resources/serverIP"
     let obfs4OptionsPath = "Resources/obfs4.json"
+    let meekOptionsPath = "Resources/meek.json"
     let stateDirectoryPath = "TransportState"
     static let sharedInstance = ShapeshifterController()
     
@@ -160,8 +161,17 @@ class ShapeshifterController
     
     func getMeekOptions() -> String?
     {
-        //TODO: Configure options for Meek Transport
-        return "no options set"
+        do
+        {
+            let meekOptionsData = try Data(contentsOf: URL(fileURLWithPath: meekOptionsPath, isDirectory: false), options: .uncached)
+            let meekOptions = String(data: meekOptionsData, encoding: String.Encoding.ascii)
+            return meekOptions
+        }
+        catch
+        {
+            print("⁉️ Unable to locate the needed meek options ⁉️.")
+            return nil
+        }
     }
     
     func getObfs4Options() -> String?

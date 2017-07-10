@@ -43,6 +43,8 @@ class AdversaryLabController
             clientLaunchTask?.waitUntilExit()
             clientLaunchTask = nil
         }
+        
+        killAll(processToKill: "client-cli")
     }
     
     func launchAdversaryLabServer()
@@ -61,6 +63,7 @@ class AdversaryLabController
         //The launchPath is the path to the executable to run.
         serverLaunchTask!.launchPath = "Resources/AdversaryLab"
         serverLaunchTask!.launch()
+        print("Launched Adversary Lab Server. 👀")
     }
     
     func stopAdversaryLabServer()
@@ -70,7 +73,10 @@ class AdversaryLabController
             serverLaunchTask?.terminate()
             serverLaunchTask?.waitUntilExit()
             serverLaunchTask = nil
+            print("Stopped Adversary Lab Server. 👀")
         }
+        
+        killAll(processToKill: "AdversaryLab")
     }
 
 }

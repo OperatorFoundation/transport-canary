@@ -32,8 +32,34 @@ class OoniReportingController
         performRequest(requestURL: url, method: POST, body: requestDictionary)
     }
     
+    func updateOoniReport(reportID: String, requestDictionary: Dictionary <String, Any>)
+    {
+        let reportURLString = "\(ooniURLString)/report/\(reportID)"
+        guard let url = URL(string: reportURLString)
+        else
+        {
+            print("Failed to update Ooni report: Unable to resolve string to URL: \(reportURLString)")
+            return
+        }
+        
+        performRequest(requestURL: url, method: POST, body: requestDictionary)
+    }
+    
+    func closeOoniReport(reportID: String)
+    {
+        let reportURLString = "\(ooniURLString)/report/\(reportID)/close"
+        guard let url = URL(string: reportURLString)
+            else
+        {
+            print("Failed to close Ooni report: Unable to resolve string to URL: \(reportURLString)")
+            return
+        }
+        
+        performRequest(requestURL: url, method: POST, body: nil)
+    }
+    
     //MARK: Generic Request
-    func performRequest(requestURL: URL, method: String, body: Any)
+    func performRequest(requestURL: URL, method: String, body: Any?)
     {
         //Cancel the data task if it already exists, so we can reuse the data task object for the new query.
         dataTask?.cancel()
@@ -42,13 +68,16 @@ class OoniReportingController
         request.httpMethod = method
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        if JSONSerialization.isValidJSONObject(body)
+        if body != nil
         {
-            request.httpBody = try?JSONSerialization.data(withJSONObject: body, options: [])
-        }
-        else
-        {
-            print("Attempted to form an HTTP request without a valid JSON Serializable object")
+            if JSONSerialization.isValidJSONObject(body!)
+            {
+                request.httpBody = try?JSONSerialization.data(withJSONObject: body!, options: [])
+            }
+            else
+            {
+                print("Attempted to form an HTTP request without a valid JSON Serializable object")
+            }
         }
         
         dataTask = session.dataTask(with: request, completionHandler:
