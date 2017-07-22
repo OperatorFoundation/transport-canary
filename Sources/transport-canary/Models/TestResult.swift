@@ -14,5 +14,7 @@ struct TestResult
     var testDate: Date
     var transport: String
     var success = false
+    var probeASN: String
+    var probeCC: String
 }
 

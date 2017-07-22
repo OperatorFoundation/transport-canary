@@ -14,36 +14,76 @@ class DatabaseController
     static let sharedInstance = DatabaseController()
     let postGresConnection = PGConnection()
     let dbInfo = "host=localhost dbname=canarydb user=canaryoperator password=canaryoperator"
-    let defaultQuery = "select serverName,success,testDate from testresult"
-    let serversTableName = "servers"
-    let resultsTableName = "testresults"
+    
+    struct ServersTable
+    {
+        static let name = "servers"
+        
+        static let serverNameKey = "servername"
+        static let cityKey = "city"
+        static let stateKey = "state"
+        static let countryKey = "country"
+        static let countryCodeKey = "countrycode"
+        static let serverNumberKey = "servernumber"
+        
+        static let serverNameField = "\(serverNameKey) varchar(50)"
+        static let cityField = "\(cityKey) varchar(50)"
+        static let stateField = "\(stateKey) varchar(50)"
+        static let countryField = "\(countryKey) varchar(50)"
+        static let countryCodeField = "\(countryCodeKey)  varchar(50)"
+        static let serverNumberField = "\(serverNumberKey) smallint"
+    }
+    
+    struct TestResultsTable
+    {
+        static let name = "testresults"
+        
+        static let testDateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
+        
+        static let serverNameKey = "servername"
+        static let testDateKey = "testdate"
+        static let successKey = "success"
+        static let transportKey = "transport"
+        static let probeASNKey = "probeasn"
+        static let probeCCKey = "probecc"
+        static let ooniReportIDKey = "oonireportid"
+        
+        static let serverNameField = "\(serverNameKey) varchar(50)"
+        static let testDateField = "\(testDateKey) timestamptz"
+        static let successField = "\(successKey) bool"
+        static let transportField = "\(transportKey) varchar(50)"
+        static let probeASNField = "\(probeASNKey) varchar(50)"
+        static let probeCCField = "\(probeCCKey) varchar(50)"
+        static let ooniReportIDField = "\(ooniReportIDKey) varchar(150)"
+    }
     
     init()
     {
         //If the table doesn't exist, create it
         //TODO: This is a Meta-Command not a sql statement, currently it will always return 0 records
-        if let tablesInDBResponse = queryDB(statement: "\\dt")
+        if let tablesInDBResponse = queryDB(statement: "select * from information_schema.tables where table_schema='public';")
         {
             let numberOfRows = tablesInDBResponse.numTuples()
             var serversTableExists = false
             var testResultsTableExists = false
+//            print("📋📋📋📋📋  Queried DB for all public tables 📋📋📋📋📋")
 //            print("servers numFields: \(tablesInDBResponse.numFields())")
 //            print("servers numTuples: \(tablesInDBResponse.numTuples())")
 //            print("servers query status: \(tablesInDBResponse.status())")
 //            print("servers query error: \(tablesInDBResponse.errorMessage())")
             for x in 0..<numberOfRows
             {
-                if let serverName = tablesInDBResponse.getFieldString(tupleIndex: x, fieldIndex: 1)
+                if let serverName = tablesInDBResponse.getFieldString(tupleIndex: x, fieldIndex: 2)
                 {
                     print("Server Name = \(serverName)")
                     
-                    if serverName == serversTableName
+                    if serverName == ServersTable.name
                     {
                         serversTableExists = true
                         print("Servers table already exists. 💾")
                         continue
                     }
-                    else if serverName == resultsTableName
+                    else if serverName == TestResultsTable.name
                     {
                         testResultsTableExists = true
                         print("Testresults table already exists. 💾")
@@ -54,7 +94,7 @@ class DatabaseController
             if serversTableExists
             {
                 //Check for records
-                if let recordsInServersResponse = queryDB(statement: "SELECT COUNT(*) FROM servers")
+                if let recordsInServersResponse = queryDB(statement: "SELECT COUNT(*) FROM \(ServersTable.name)")
                 {
                     let numberOfRows = recordsInServersResponse.numTuples()
                     var numberOfRecords: Int = 0
@@ -80,7 +120,7 @@ class DatabaseController
             else
             {
                 //Create Servers Table
-                if let createServerTableResponse = queryDB(statement: "CREATE TABLE servers (servername varchar(50), city varchar(50), state varchar(50), country varchar(50), countrycode varchar(50), servernumber smallint )")
+                if let createServerTableResponse = queryDB(statement: "CREATE TABLE \(ServersTable.name) (\(ServersTable.serverNameField), \(ServersTable.cityField), \(ServersTable.stateField), \(ServersTable.countryField), \(ServersTable.countryCodeField), \(ServersTable.serverNumberField) )")
                 {
                     if createServerTableResponse.status() == .commandOK
                     {
@@ -101,15 +141,18 @@ class DatabaseController
             {
                 //Create results Table
                 
-                if let createServerTableResponse = queryDB(statement: "CREATE TABLE testresults (servername varchar(50), testdate timestamptz, success bool, transport varchar(50) )")
+                if let createTestResultsTableResponse = queryDB(statement: "CREATE TABLE \(TestResultsTable.name) (\(TestResultsTable.serverNameField), \(TestResultsTable.testDateField), \(TestResultsTable.successField), \(TestResultsTable.transportField), \(TestResultsTable.probeASNField), \(TestResultsTable.probeCCField), \(TestResultsTable.ooniReportIDField) )")
                 {
-                    if createServerTableResponse.status() == .commandOK
+                    if createTestResultsTableResponse.status() == .commandOK
                     {
                         print("Created testresults Table")
-                        populateServersTable()
                         
-                        createServerTableResponse.clear()
+                        createTestResultsTableResponse.clear()
                         postGresConnection.close()
+                    }
+                    else
+                    {
+                        print("ERROR creating testresults table: \(createTestResultsTableResponse.errorMessage())")
                     }
                 }
                 else
@@ -153,7 +196,7 @@ class DatabaseController
             return
         }
         
-        let result = postGresConnection.exec(statement: "select servername,country,servernumber from servers")
+        let result = postGresConnection.exec(statement: "select * from \(ServersTable.name)")
         
         let numberOfRows = result.numTuples()
         print("There are \(numberOfRows) servers listed in the servers table.")
@@ -181,46 +224,6 @@ class DatabaseController
         postGresConnection.close()
     }
     
-    func queryForTestResultInfo()
-    {
-        let status = postGresConnection.connectdb(dbInfo)
-        defer
-        {
-            postGresConnection.finish()
-        }
-        if status == .bad
-        {
-            return
-        }
-        
-        let result = postGresConnection.exec(statement: defaultQuery)
-        
-        let numberOfRows = result.numTuples()
-        for x in 0..<numberOfRows
-        {
-            print("DB Query results:")
-            print("Record \(x)")
-            
-            if let serverName = result.getFieldString(tupleIndex: x, fieldIndex: 0)
-            {
-                print("Server Name - \(serverName)")
-            }
-            
-            if let success = result.getFieldBool(tupleIndex: x, fieldIndex: 1)
-            {
-                print("Success? - \(success)")
-            }
-            
-            if let testDate = result.getFieldString(tupleIndex: x, fieldIndex: 2)
-            {
-                print("Test Date - \(testDate)")
-            }
-        }
-        
-        result.clear()
-        postGresConnection.close()
-    }
-    
     func queryDB(statement: String) -> PGResult?
     {
         let status = postGresConnection.connectdb(dbInfo)
@@ -238,15 +241,14 @@ class DatabaseController
         return result
     }
     
-    func insertTestResult(serverName: String, success: Bool, testDate: Date, transport: String) -> Bool
+    func insert(testResult: TestResult) -> Bool
     {
         //Filler, need to research the best way to handle the dates.
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
-        //"yyyy-MM-dd HH:mm:ss-TZ"
+        dateFormatter.dateFormat = TestResultsTable.testDateFormat
         dateFormatter.timeZone = TimeZone.init(abbreviation: "UTC")
         
-        let testDateString = dateFormatter.string(from: testDate)
+        let testDateString = dateFormatter.string(from: testResult.testDate)
         
         let status = postGresConnection.connectdb(dbInfo)
         defer
@@ -259,7 +261,14 @@ class DatabaseController
             return false
         }
         
-        let result = postGresConnection.exec(statement: "insert into testresults (serverName, success, testDate, transport) values ($1, $2, $3, $4)", params: [serverName, success, testDateString, transport])
+        let result = postGresConnection.exec(
+            statement: "insert into \(TestResultsTable.name) (\(TestResultsTable.serverNameKey), \(TestResultsTable.successKey), \(TestResultsTable.testDateKey), \(TestResultsTable.transportKey), \(TestResultsTable.probeASNKey), \(TestResultsTable.probeCCKey)) values ($1, $2, $3, $4, $5, $6)",
+            params: [testResult.serverName,
+                     testResult.success,
+                     testDateString,
+                     testResult.transport,
+                     testResult.probeASN,
+                     testResult.probeCC])
         
         if result.status() == .commandOK
         {
@@ -272,6 +281,39 @@ class DatabaseController
             result.clear()
             return false
         }
+    }
+    
+    func insert(ooniReportID: String, serverName: String) -> Bool
+    {
+        var success = false
+        
+        let status = postGresConnection.connectdb(dbInfo)
+        defer
+        {
+            postGresConnection.finish()
+        }
+        
+        if status == .bad
+        {
+            print("Unable to add report id to test result: Bad DB connection status.")
+            return false
+        }
+        
+        let result = postGresConnection.exec(statement: "UPDATE \(TestResultsTable.name) SET \(TestResultsTable.ooniReportIDKey) = \'\(ooniReportID)\' WHERE \(TestResultsTable.serverNameKey) = \'\(serverName)\';")
+        
+        if result.status() == .commandOK
+        {
+            result.clear()
+            success = true
+        }
+        else
+        {
+            print("Error updating test result with report ID: \(result.errorMessage())")
+            result.clear()
+            success = false
+        }
+        
+        return success
     }
     
     func insertServerInfo(_ serverName: String, _ serverNumber:Int, _ countryCode: String, _ country: String, _ city: String?,  _ state: String?) -> Bool
@@ -293,20 +335,40 @@ class DatabaseController
         {
             if let state = state
             {
-                result = postGresConnection.exec(statement: "insert into servers (serverName, serverNumber, countrycode, country, city, state) values($1, $2, $3, $4, $5, $6)", params: [serverName, serverNumber, countryCode, country, city, state])
+                result = postGresConnection.exec(statement: "insert into \(ServersTable.name) (\(ServersTable.serverNameKey), \(ServersTable.serverNumberKey), \(ServersTable.countryCodeKey), \(ServersTable.countryKey), \(ServersTable.cityKey), \(ServersTable.stateKey)) values($1, $2, $3, $4, $5, $6)",
+                    params: [serverName,
+                             serverNumber,
+                             countryCode,
+                             country,
+                             city,
+                             state])
             }
             else
             {
-                result = postGresConnection.exec(statement: "insert into servers (serverName, serverNumber, countrycode, country, city) values($1, $2, $3, $4, $5)", params: [serverName, serverNumber, countryCode, country, city])
+                result = postGresConnection.exec(statement: "insert into \(ServersTable.name) (\(ServersTable.serverNameKey), \(ServersTable.serverNumberKey), \(ServersTable.countryCodeKey), \(ServersTable.countryKey), \(ServersTable.cityKey)) values($1, $2, $3, $4, $5)",
+                    params: [serverName,
+                             serverNumber,
+                             countryCode,
+                             country,
+                             city])
             }
         }
         else if let state = state
         {
-            result = postGresConnection.exec(statement: "insert into servers (serverName, serverNumber, country, countrycode, state) values($1, $2, $3, $4, $5)", params: [serverName, serverNumber, countryCode, country, state])
+            result = postGresConnection.exec(statement: "insert into \(ServersTable.name) (\(ServersTable.serverNameKey), \(ServersTable.serverNumberKey), \(ServersTable.countryCodeKey), \(ServersTable.countryKey), \(ServersTable.stateKey)) values($1, $2, $3, $4, $5)",
+                params: [serverName,
+                         serverNumber,
+                         countryCode,
+                         country,
+                         state])
         }
         else
         {
-            result = postGresConnection.exec(statement: "insert into servers (serverName, serverNumber, countrycode, country) values($1, $2, $3, $4)", params: [serverName, serverNumber, countryCode, country])
+            result = postGresConnection.exec(statement: "insert into \(ServersTable.name) (\(ServersTable.serverNameKey), \(ServersTable.serverNumberKey), \(ServersTable.countryCodeKey), \(ServersTable.countryKey)) values($1, $2, $3, $4)",
+                params: [serverName,
+                         serverNumber,
+                         countryCode,
+                         country])
         }
         
         if result.status() == .commandOK

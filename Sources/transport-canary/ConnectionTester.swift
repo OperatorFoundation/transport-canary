@@ -38,12 +38,29 @@ class ConnectionTester
                 
                 sleep(1)
                 
-                ///Connection Test
-                let connectionTest = ConnectionTest()
-                let success = connectionTest.run()
-                
-                ///Generate Test Result
-                result = TestResult.init(serverName: serverName, testDate: Date(), transport: transport, success: success)
+                if let ipString = String(data: OpenVPNController.sharedInstance!.lastIP, encoding: String.Encoding.utf8)
+                {
+                    //Probe ASN is a required field for Ooni reporting.
+                    if let (probeASN, probeCC) = getProbeInfo(ipString: ipString) as? (String, String)
+                    {
+                        ///Connection Test
+                        let connectionTest = ConnectionTest()
+                        let success = connectionTest.run()
+                        
+                        ///Generate Test Result
+                        result = TestResult.init(serverName: serverName, testDate: Date(), transport: transport, success: success, probeASN: probeASN, probeCC: probeCC)
+                    }
+                    else
+                    {
+                        print("FAILED TO RUN TEST:")
+                        print("Unable to get probe ASN")
+                    }
+                }
+                else
+                {
+                    print("FAILED TO RUN TEST:")
+                    print("Unable to get probe ASN - unable to resolve server IP")
+                }
             }
             else
             {
@@ -52,13 +69,52 @@ class ConnectionTester
         }
         
         ///Cleanup
-        ShapeshifterController.sharedInstance.stopShapeshifterClient()
+        print("🛁 🛁 🛁 🛁  Cleanup! 🛁 🛁 🛁 🛁")
         OpenVPNController.sharedInstance!.stopOpenVPN()
+        ShapeshifterController.sharedInstance.stopShapeshifterClient()
         OpenVPNController.sharedInstance!.fixTheInternet()
         
         sleep(5)
         
         return result
+    }
+    
+    func getProbeInfo(ipString: String) -> (probeASN: String?, probeCC: String?)
+    {
+        let pipe = Pipe()
+        let task = Process()
+        task.standardOutput = pipe
+        task.launchPath = "/usr/bin/whois"
+        
+        var taskArguments: [String] = []
+        taskArguments.append("-h")
+        taskArguments.append("whois.cymru.com")
+        taskArguments.append(" -v \(ipString)")
+        
+        task.arguments = taskArguments
+        
+        task.launch()
+        task.waitUntilExit()
+        
+        let responseData = pipe.fileHandleForReading.readDataToEndOfFile()
+        
+        if let responseString = String(data: responseData, encoding: String.Encoding.ascii)
+        {
+            let (_, row2) = responseString.slice("\n")
+            let fieldsArray: Array = row2.components(separatedBy: "|")
+            
+            //probeASN
+            let rawASN = fieldsArray[0].replacingOccurrences(of: " ", with: "")
+            let asn = "AS\(rawASN)"
+            
+            //probeCC
+            let probeCC = fieldsArray[3].replacingOccurrences(of: " ", with: "")
+            return (asn, probeCC)
+        }
+        else
+        {
+            return (nil, nil)
+        }
     }
 
 }
