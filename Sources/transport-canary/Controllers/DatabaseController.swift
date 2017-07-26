@@ -47,6 +47,7 @@ class DatabaseController
         static let probeASNKey = "probeasn"
         static let probeCCKey = "probecc"
         static let ooniReportIDKey = "oonireportid"
+        static let reportClosedKey = "reportclosed"
         
         static let serverNameField = "\(serverNameKey) varchar(50)"
         static let testDateField = "\(testDateKey) timestamptz"
@@ -55,6 +56,7 @@ class DatabaseController
         static let probeASNField = "\(probeASNKey) varchar(50)"
         static let probeCCField = "\(probeCCKey) varchar(50)"
         static let ooniReportIDField = "\(ooniReportIDKey) varchar(150)"
+        static let reportClosedField = "\(reportClosedKey) bool"
     }
     
     init()
@@ -73,17 +75,15 @@ class DatabaseController
 //            print("servers query error: \(tablesInDBResponse.errorMessage())")
             for x in 0..<numberOfRows
             {
-                if let serverName = tablesInDBResponse.getFieldString(tupleIndex: x, fieldIndex: 2)
+                if let tableName = tablesInDBResponse.getFieldString(tupleIndex: x, fieldIndex: 2)
                 {
-                    print("Server Name = \(serverName)")
-                    
-                    if serverName == ServersTable.name
+                    if tableName == ServersTable.name
                     {
                         serversTableExists = true
                         print("Servers table already exists. 💾")
                         continue
                     }
-                    else if serverName == TestResultsTable.name
+                    else if tableName == TestResultsTable.name
                     {
                         testResultsTableExists = true
                         print("Testresults table already exists. 💾")
@@ -140,8 +140,7 @@ class DatabaseController
             if testResultsTableExists == false
             {
                 //Create results Table
-                
-                if let createTestResultsTableResponse = queryDB(statement: "CREATE TABLE \(TestResultsTable.name) (\(TestResultsTable.serverNameField), \(TestResultsTable.testDateField), \(TestResultsTable.successField), \(TestResultsTable.transportField), \(TestResultsTable.probeASNField), \(TestResultsTable.probeCCField), \(TestResultsTable.ooniReportIDField) )")
+                if let createTestResultsTableResponse = queryDB(statement: "CREATE TABLE \(TestResultsTable.name) (\(TestResultsTable.serverNameField), \(TestResultsTable.testDateField), \(TestResultsTable.successField), \(TestResultsTable.transportField), \(TestResultsTable.probeASNField), \(TestResultsTable.probeCCField), \(TestResultsTable.ooniReportIDField), \(TestResultsTable.reportClosedField) )")
                 {
                     if createTestResultsTableResponse.status() == .commandOK
                     {
@@ -184,6 +183,37 @@ class DatabaseController
             return false
         }
     }
+    
+    
+    func queryForServerCC(serverName: String) -> String?
+    {
+        var countryCode: String?
+        
+        let status = postGresConnection.connectdb(dbInfo)
+        defer
+        {
+            postGresConnection.finish()
+        }
+        if status == .bad
+        {
+            return nil
+        }
+        
+        let result = postGresConnection.exec(statement: "select \(ServersTable.countryCodeKey) from \(ServersTable.name) where \(ServersTable.serverNameKey) = \'\(serverName)\'")
+        
+        let numberOfRows = result.numTuples()
+        
+        if numberOfRows > 0
+        {
+            let cc = result.getFieldString(tupleIndex: 0, fieldIndex: 0)
+            countryCode = cc
+        }
+        
+        result.clear()
+        postGresConnection.close()
+        return countryCode
+    }
+    
     func queryForServerInfo()
     {
         let status = postGresConnection.connectdb(dbInfo)
@@ -300,6 +330,39 @@ class DatabaseController
         }
         
         let result = postGresConnection.exec(statement: "UPDATE \(TestResultsTable.name) SET \(TestResultsTable.ooniReportIDKey) = \'\(ooniReportID)\' WHERE \(TestResultsTable.serverNameKey) = \'\(serverName)\';")
+        
+        if result.status() == .commandOK
+        {
+            result.clear()
+            success = true
+        }
+        else
+        {
+            print("Error updating test result with report ID: \(result.errorMessage())")
+            result.clear()
+            success = false
+        }
+        
+        return success
+    }
+    
+    func insert(reportClosedStatus: Bool, serverName: String) -> Bool
+    {
+        var success = false
+        
+        let status = postGresConnection.connectdb(dbInfo)
+        defer
+        {
+            postGresConnection.finish()
+        }
+        
+        if status == .bad
+        {
+            print("Unable to add report id to test result: Bad DB connection status.")
+            return false
+        }
+        
+        let result = postGresConnection.exec(statement: "UPDATE \(TestResultsTable.name) SET \(TestResultsTable.reportClosedKey) = \'\(reportClosedStatus)\' WHERE \(TestResultsTable.serverNameKey) = \'\(serverName)\';")
         
         if result.status() == .commandOK
         {

@@ -12,9 +12,11 @@ class ShapeshifterController
 {
     private var launchTask: Process?
     let ptServerPort = "1234"
+    let shsocksServerPort = "4321"
     let serverIPFilePath = "Resources/serverIP"
     let obfs4OptionsPath = "Resources/obfs4.json"
     let meekOptionsPath = "Resources/meek.json"
+    let shSocksOptionsPath = "Resources/shadowsocks.json"
     let stateDirectoryPath = "TransportState"
     static let sharedInstance = ShapeshifterController()
     
@@ -75,23 +77,9 @@ class ShapeshifterController
     
     func shapeshifterArguments(forTransport transport: String) -> [String]?
     {
-        if let stateDirectory = createTransportStateDirectory(), let obfs4Options = getObfs4Options()
+        if let stateDirectory = createTransportStateDirectory()
         {
             var options: String?
-            
-            if transport == meek
-            {
-                options = getMeekOptions()
-            }
-            else if transport == obfs4
-            {
-                options = getObfs4Options()
-            }
-            
-            if options == nil
-            {
-                return nil
-            }
             
             do
             {
@@ -106,9 +94,32 @@ class ShapeshifterController
                 //Puts Dispatcher in client mode.
                 processArguments.append("-client")
                 
-                //IP and Port for our PT Server
-                processArguments.append("-target")
-                processArguments.append("\(serverIP):\(ptServerPort)")
+                if transport == meek
+                {
+                    options = getMeekOptions()
+                }
+                else if transport == obfs4
+                {
+                    options = getObfs4Options()
+                    
+                    //IP and Port for our PT Server
+                    processArguments.append("-target")
+                    processArguments.append("\(serverIP):\(ptServerPort)")
+                }
+                else if transport == shadowsocks
+                {
+                    options = getShadowSocksOptions()
+                    
+                    //If shSocks use special port
+                    processArguments.append("-target")
+                    processArguments.append("\(serverIP):\(shsocksServerPort)")
+                }
+                
+                if options == nil
+                {
+                    //Something's wrong, let's get out of here.
+                    return nil
+                }
                 
                 //Here is our list of transports (more than one would launch multiple proxies)
                 processArguments.append("-transports")
@@ -119,9 +130,10 @@ class ShapeshifterController
                 processArguments.append("-bindaddr")
                 processArguments.append("obfs4-127.0.0.1:1234")
                 
-                //Paramaters needed by the specific transport being used (obfs4)
+                //This should use generic options based on selected transport
+                //Paramaters needed by the specific transport being used
                 processArguments.append("-options")
-                processArguments.append(obfs4Options)
+                processArguments.append(options!)
                 
                 //Creates a directory if it doesn't already exist for transports to save needed files
                 processArguments.append("-state")
@@ -156,7 +168,6 @@ class ShapeshifterController
         {
             return nil
         }
-        
     }
     
     func getMeekOptions() -> String?
@@ -185,6 +196,21 @@ class ShapeshifterController
         catch
         {
             print("⁉️ Unable to locate the needed obfs4 options ⁉️.")
+            return nil
+        }
+    }
+    
+    func getShadowSocksOptions() -> String?
+    {
+        do
+        {
+            let shSocksOptionsData = try Data(contentsOf: URL(fileURLWithPath: shSocksOptionsPath, isDirectory: false) , options: .uncached)
+            let shSocksOptions = String(data: shSocksOptionsData, encoding: String.Encoding.ascii)
+            return shSocksOptions
+        }
+        catch
+        {
+            print("⁉️ Unable to locate the needed shadowsocks options ⁉️.")
             return nil
         }
     }

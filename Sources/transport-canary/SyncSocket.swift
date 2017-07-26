@@ -163,7 +163,6 @@ struct SyncSocket
             {
                 buffer.append(s)
                 (prefix, buffer) = buffer.slice(delim)
-                print("SLICED BUFFER")
                 print("PREFIX: 🔶  \(String(describing: prefix)) 🔶")
                 print("REMAINING BUFFER: 🔷  \(buffer) 🔷")
             }
@@ -211,8 +210,8 @@ extension String
                 buffer.removeSubrange(range)
             }
             
-            print("FirstLine: \(firstLine)")
-            print("buffer: \(buffer)")
+//            print("FirstLine: \(firstLine)")
+//            print("buffer: \(buffer)")
             
             return (prefix, buffer)
         }

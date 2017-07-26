@@ -41,7 +41,6 @@ class BatchTestController
 //                    return
 //                }
                 
-                print("💥💥💥💥💥💥  Testing \(config) 💥💥💥💥💥")
                 let tester = ConnectionTester.init(configFileName: config)
                 if let testResult = tester.runTest(forTransport: transport)
                 {
@@ -50,7 +49,7 @@ class BatchTestController
                     print("Added to database = \(addRecordSuccess)")
                     
                     //Ooni Reporting
-                    reportToOoni(testResult: testResult)
+                    //reportToOoni(testResult: testResult)
                     
                     
                     if testResult.success
@@ -97,6 +96,7 @@ class BatchTestController
         {
             print(error)
         }
+        
     }
     
     func reportToOoni(testResult: TestResult)
@@ -143,9 +143,20 @@ class BatchTestController
                                     
                                     if let closeResponseDictionary = maybeCloseResponseDictionary
                                     {
-                                        print("Close Ooni Report response: \(closeResponseDictionary)")
-                                        
                                         //TODO: Update DB
+                                        print("Close Ooni Report response: \(closeResponseDictionary)")
+                                        var closed = false
+                                        
+                                        let addedReportStatusToDB = DatabaseController.sharedInstance.insert(reportClosedStatus: closed, serverName: testResult.serverName)
+                                        
+                                        if addedReportStatusToDB
+                                        {
+                                            print("Saved report status to the database!")
+                                        }
+                                        else
+                                        {
+                                            print("Unable to save report status to the database.")
+                                        }
                                     }
                                 })
                             }

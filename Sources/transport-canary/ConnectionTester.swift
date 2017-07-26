@@ -19,6 +19,18 @@ class ConnectionTester
     {
         self.configFileName = configFileName
         self.serverName = configFileName.replacingOccurrences(of: "-tcp.ovpn", with: "")
+        
+        if let countryCode = DatabaseController.sharedInstance.queryForServerCC(serverName: self.serverName)
+        {
+            let country = Country(code: countryCode)
+            let flag = country.emojiFlag
+            print("\(flag) \(flag) \(flag) \(flag)  Testing \(self.serverName) \(flag) \(flag) \(flag) \(flag)")
+        }
+        else
+        {
+            print("💥💥💥💥💥💥  Testing \(self.serverName) 💥💥💥💥💥")
+        }
+        
     }
     
     func runTest(forTransport transport: String) -> TestResult?
@@ -41,7 +53,7 @@ class ConnectionTester
                 if let ipString = String(data: OpenVPNController.sharedInstance!.lastIP, encoding: String.Encoding.utf8)
                 {
                     //Probe ASN is a required field for Ooni reporting.
-                    if let (probeASN, probeCC) = getProbeInfo(ipString: ipString) as? (String, String)
+                    if let (probeASN, probeCC) = getProbeInfo(ipString: ipString, severName: serverName) as? (String, String)
                     {
                         ///Connection Test
                         let connectionTest = ConnectionTest()
@@ -79,8 +91,9 @@ class ConnectionTester
         return result
     }
     
-    func getProbeInfo(ipString: String) -> (probeASN: String?, probeCC: String?)
+    func getProbeInfo(ipString: String, severName: String) -> (probeASN: String?, probeCC: String?)
     {
+        //Probe ASN is Fetched via whois command
         let pipe = Pipe()
         let task = Process()
         task.standardOutput = pipe
@@ -98,23 +111,25 @@ class ConnectionTester
         
         let responseData = pipe.fileHandleForReading.readDataToEndOfFile()
         
-        if let responseString = String(data: responseData, encoding: String.Encoding.ascii)
-        {
-            let (_, row2) = responseString.slice("\n")
-            let fieldsArray: Array = row2.components(separatedBy: "|")
-            
-            //probeASN
-            let rawASN = fieldsArray[0].replacingOccurrences(of: " ", with: "")
-            let asn = "AS\(rawASN)"
-            
-            //probeCC
-            let probeCC = fieldsArray[3].replacingOccurrences(of: " ", with: "")
-            return (asn, probeCC)
-        }
-        else
+        guard let responseString = String(data: responseData, encoding: String.Encoding.ascii)
+            else
         {
             return (nil, nil)
         }
+        
+        let (_, row2) = responseString.slice("\n")
+        let fieldsArray: Array = row2.components(separatedBy: "|")
+        let rawASN = fieldsArray[0].replacingOccurrences(of: " ", with: "")
+        let asn = "AS\(rawASN)"
+        
+        //Country code comes from our servers table.
+        guard let countryCode = DatabaseController.sharedInstance.queryForServerCC(serverName: serverName)
+            else
+        {
+            return (nil, nil)
+        }
+        
+        return (asn, countryCode)
     }
 
 }
@@ -150,14 +165,20 @@ class ConnectionTest
                 }
                 else
                 {
-                    print("We connected but the data did not match. 🖤")
+                    print("🖤  We connected but the data did not match. 🖤")
+                    
+                    if let observedString = String(data: observedData, encoding: String.Encoding.ascii)
+                    {
+                        print("Here's what we got back instead: \(observedString)")
+                    }
+                   
                     return false
                 }
                 
             }
             catch
             {
-                print("We could not connect. 💔")
+                print("💔  We could not connect to \(testWebAddress): \(error). 💔")
                 return false
             }
         }

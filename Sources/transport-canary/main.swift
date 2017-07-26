@@ -6,6 +6,7 @@ let configs = Dir("Resources/config")
 let keys = Dir("Resources/keys")
 var obfs4 = "obfs4"
 var meek = "meek"
+var shadowsocks = "shadowsocks"
 
 signal(SIGINT)
 {
@@ -32,10 +33,8 @@ OpenVPNController.sharedInstance!.fixTheInternet()
 //Now we are running the things. Hooray!
 AdversaryLabController.sharedInstance.launchAdversaryLabServer()
 
-BatchTestController.sharedInstance.runAllTests(forTransport: obfs4)
+//BatchTestController.sharedInstance.runAllTests(forTransport: obfs4)
 
 BatchTestController.sharedInstance.runAllTests(forTransport: meek)
 
 AdversaryLabController.sharedInstance.stopAdversaryLabServer()
-
-//Reporting to Ooni goes here:
