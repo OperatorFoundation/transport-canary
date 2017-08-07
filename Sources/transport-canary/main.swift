@@ -19,6 +19,9 @@ signal(SIGINT)
     OpenVPNController.sharedInstance!.stopOpenVPN()
     OpenVPNController.sharedInstance!.fixTheInternet()
     AdversaryLabController.sharedInstance.stopAdversaryLabServer()
+    
+    //Write a Report
+    OperatorReportingController.sharedInstance.createReportTextFile()
     exit(0)
 }
 
@@ -33,7 +36,7 @@ OpenVPNController.sharedInstance!.fixTheInternet()
 //Now we are running the things. Hooray!
 AdversaryLabController.sharedInstance.launchAdversaryLabServer()
 
-//BatchTestController.sharedInstance.runAllTests(forTransport: obfs4)
+BatchTestController.sharedInstance.runAllTests(forTransport: obfs4)
 
 BatchTestController.sharedInstance.runAllTests(forTransport: meek)
 
