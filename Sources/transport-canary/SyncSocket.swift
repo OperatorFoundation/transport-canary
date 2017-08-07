@@ -70,7 +70,7 @@ struct SyncSocket
             let dispatchGroup = DispatchGroup()
             dispatchGroup.enter()
             
-            self.sessionTask.readData(ofMinLength: 1, maxLength: 4096, timeout: 10, completionHandler:
+            self.sessionTask.readData(ofMinLength: 1, maxLength: 4096, timeout: 20, completionHandler:
                 {
                     (maybeData, endOF, maybeError) in
                     
@@ -162,8 +162,9 @@ struct SyncSocket
             else if let s = maybeString
             {
                 buffer.append(s)
-                
                 (prefix, buffer) = buffer.slice(delim)
+                print("PREFIX: 🔶  \(String(describing: prefix)) 🔶")
+                print("REMAINING BUFFER: 🔷  \(buffer) 🔷")
             }
             else
             {
@@ -174,6 +175,7 @@ struct SyncSocket
         if prefix == nil
         {
             // Must be an EOF
+            print("🛑  EOF 🛑")
             return (nil, eof, nil, buffer)
         }
         else
@@ -208,8 +210,8 @@ extension String
                 buffer.removeSubrange(range)
             }
             
-            print("FirstLine: \(firstLine)")
-            print("buffer: \(buffer)")
+//            print("FirstLine: \(firstLine)")
+//            print("buffer: \(buffer)")
             
             return (prefix, buffer)
         }

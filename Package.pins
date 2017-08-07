@@ -1,7 +1,24 @@
 {
   "autoPin": true,
   "pins": [
-
+    {
+      "package": "PerfectLib",
+      "reason": null,
+      "repositoryURL": "https://github.com/PerfectlySoft/PerfectLib.git",
+      "version": "2.0.11"
+    },
+    {
+      "package": "PostgreSQL",
+      "reason": null,
+      "repositoryURL": "https://github.com/PerfectlySoft/Perfect-PostgreSQL.git",
+      "version": "2.0.2"
+    },
+    {
+      "package": "libpq",
+      "reason": null,
+      "repositoryURL": "https://github.com/PerfectlySoft/Perfect-libpq.git",
+      "version": "2.0.1"
+    }
   ],
   "version": 1
 }

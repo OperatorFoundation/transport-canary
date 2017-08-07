@@ -8,7 +8,7 @@
 
 import Foundation
 
-class OoniNewReportRequest
+class OoniNewReportRequest: CustomStringConvertible
 {
     let softwareNameKey = "software_name"
     let softwareVersionKey = "software_version"
@@ -40,8 +40,8 @@ class OoniNewReportRequest
     var dateFormatVersion: String = "json"
     //`string` that must be either "json" or "yaml" to identify the format of the content.
     
-    var softwareVersion: String
-    {
+    var softwareVersion: String = "0.0.10-beta"
+    /*{
         get
         {
             if let bundleVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
@@ -53,7 +53,7 @@ class OoniNewReportRequest
                 return "unknown"
             }
         }
-    }
+    }*/
     //`string` the version of the software creating the report (ex. "0.0.10-beta")
     
     var probeASN: String
@@ -80,18 +80,27 @@ class OoniNewReportRequest
     var probeIP: String?
     //(optional) `string` the IP Address of the ooniprobe client. When the test requires a test_helper the probe should inform oonib of it's IP address. We need to know this since we are not sure if the probe is accessing the report collector via Tor or not.
     
-    init(probeASN: String, probeCountryCode: String, testName: String, testVersion: String, testStartTime: String)
+    init(testResult: TestResult)
     {
-        self.probeASN = probeASN
-        self.probeCC = probeCountryCode
-        self.testName = testName
-        self.testVersion = testVersion
-        self.testStartTime = testStartTime
+        self.probeASN = testResult.probeASN
+        self.testName = "Test Transport Canary - \(testResult.transport)"
+        self.testVersion = "0.1"
+        self.probeCC = testResult.probeCC
+        
+        //Submit date as string in format requested by Ooni
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "Y-m-d H:M:S"
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        let ooniDateString = dateFormatter.string(from: testResult.testDate)
+        self.testStartTime = ooniDateString
         
         ///These are optional values that we are not currently using
         self.inputHashes = nil
         self.testHelper = nil
         self.probeIP = nil
+        
+        //print("📝 📝 📝  Created a new report request for Ooni reporting: 📝 📝 📝")
+        //print(self)
     }
     
     func createRequestDictionary() -> Dictionary <String, Any>

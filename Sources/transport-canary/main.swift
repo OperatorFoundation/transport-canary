@@ -6,6 +6,7 @@ let configs = Dir("Resources/config")
 let keys = Dir("Resources/keys")
 var obfs4 = "obfs4"
 var meek = "meek"
+var shadowsocks = "shadowsocks"
 
 signal(SIGINT)
 {
@@ -18,6 +19,9 @@ signal(SIGINT)
     OpenVPNController.sharedInstance!.stopOpenVPN()
     OpenVPNController.sharedInstance!.fixTheInternet()
     AdversaryLabController.sharedInstance.stopAdversaryLabServer()
+    
+    //Write a Report
+    OperatorReportingController.sharedInstance.createReportTextFile()
     exit(0)
 }
 
@@ -29,10 +33,11 @@ AdversaryLabController.sharedInstance.stopAdversaryLab()
 //Open VPN eats the internet
 OpenVPNController.sharedInstance!.fixTheInternet()
 
-//Now we re running the things. Hooray!
+//Now we are running the things. Hooray!
 AdversaryLabController.sharedInstance.launchAdversaryLabServer()
-BatchTestController.sharedInstance.runAllTests(forTransport: obfs4)
-BatchTestController.sharedInstance.runAllTests(forTransport: meek)
-AdversaryLabController.sharedInstance.stopAdversaryLabServer()
 
-//Reporting to Ooni goes here:
+BatchTestController.sharedInstance.runAllTests(forTransport: obfs4)
+
+BatchTestController.sharedInstance.runAllTests(forTransport: meek)
+
+AdversaryLabController.sharedInstance.stopAdversaryLabServer()

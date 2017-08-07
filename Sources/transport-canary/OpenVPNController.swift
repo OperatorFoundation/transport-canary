@@ -78,15 +78,17 @@ class OpenVPNController
         
         //Arguments
         let openVpnArguments = connectToOpenVPNArguments(configFilePath: configFilePath)
+        
+        print("OpenVPN Arguments:\n\(openVpnArguments)")
 
         runOpenVpnScript(openVPNFilePath, logDirectory: configFilePath, arguments: openVpnArguments)
         sleep(2)
         
         let connected = connectToManagement() && self.areWeConnected()
-        if !connected
-        {
-            self.stopOpenVPN()
-        }
+//        if !connected
+//        {
+//            self.stopOpenVPN()
+//        }
         
         return connected
     }
@@ -94,16 +96,16 @@ class OpenVPNController
     func stopOpenVPN()
     {
         print("******* STOP OpenVpn CALLED *******")
-        
+        disconnectFromManagement()
         //Disconnect OpenVPN
         if OpenVPNController.connectTask != nil
         {
             OpenVPNController.connectTask!.terminate()
-            OpenVPNController.connectTask!.waitUntilExit()
+            //OpenVPNController.connectTask!.waitUntilExit()
         }
         
         killAll(processToKill: "openvpn")
-        disconnectFromManagement()
+        
     }
     
     func areWeConnected() -> Bool
@@ -178,12 +180,25 @@ class OpenVPNController
         //Arguments will pass the arguments to the executable, as though typed directly into terminal.
         OpenVPNController.connectTask.arguments = arguments
         
+        print("OpenVPN Arguments2:\n\(arguments)")
+        print("Launch path: \(path)")
+        
         //Go ahead and launch the process/task
-        OpenVPNController.connectTask.launch()
+        //OpenVPNController.connectTask.launch()
+        
+        do
+        {
+            try OpenVPNController.connectTask.launch()
+        }
+        catch
+        {
+            print("Error launching openvpn: \(error.localizedDescription)")
+        }
     }
     
     func connectToManagement() -> Bool
     {
+        print("Attempting to connect to management server.")
         maybeSyncSocket = SyncSocket.connect(host: hostIPString, port: port)
         guard let syncSocket = maybeSyncSocket else
         {
@@ -204,9 +219,12 @@ class OpenVPNController
         var maybeReadError: Error?
         var maybeRest: String?
 
+        var retryCount: Int = 0
+        
         while !isConnected && !eof
         {
-            (maybePrefix, eof, maybeReadError, maybeRest) = syncSocket.readUntil("\r\n", maybeRest)
+            //\r\n
+            (maybePrefix, eof, maybeReadError, maybeRest) = syncSocket.readUntil(">STATE:", maybeRest)
             
             guard maybeReadError == nil else
             {
@@ -217,7 +235,11 @@ class OpenVPNController
             if let prefix = maybePrefix
             {
                 let (_, maybeRemainingString) = prefix.slice(",")
+                //print("MAYBEREMAININGSTRING: \(maybeRemainingString)")
                 let (maybeStatusString, _) = maybeRemainingString.slice(",")
+                //print("MAYBESTATUSSTRING: \(String(describing: maybeStatusString))")
+                
+                
                 
                 if let statusString = maybeStatusString
                 {
@@ -228,8 +250,48 @@ class OpenVPNController
                     else if statusString == "RECONNECTING"
                     {
                         isConnected = false
-                        print("Giving up on connecting to OpenVPN, received RECONNECTING status.")
-                        return isConnected
+                        if retryCount > 3
+                        {
+                            print("Giving up on connecting to OpenVPN, received RECONNECTING status in prefix.")
+                            return isConnected
+                            
+                        }
+                        else
+                        {
+                            retryCount += 1
+                        }
+                        
+                    }
+                }
+            }
+            
+            if let buffer = maybeRest
+            {
+                let (_, maybeRemainingString) = buffer.slice(",")
+                //print("buffer -> MAYBEREMAININGSTRING: \(maybeRemainingString)")
+                let (maybeStatusString, _) = maybeRemainingString.slice(",")
+                //print("buffer -> MAYBESTATUSSTRING: \(String(describing: maybeStatusString))")
+                
+                if let statusString = maybeStatusString
+                {
+                    if statusString == "CONNECTED"
+                    {
+                        isConnected = true
+                    }
+                    else if statusString == "RECONNECTING"
+                    {
+                        isConnected = false
+                        
+                        if retryCount > 3
+                        {
+                            print("Giving up on connecting to OpenVPN, received RECONNECTING status in buffer.")
+                            return isConnected
+                            
+                        }
+                        else
+                        {
+                            retryCount += 1
+                        }
                     }
                 }
             }
