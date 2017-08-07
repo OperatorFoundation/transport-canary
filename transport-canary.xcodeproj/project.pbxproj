@@ -62,6 +62,8 @@
 		462F86B01F27F04200105528 /* Atlas.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Atlas.swift; sourceTree = "<group>"; };
 		4637E10D1F02CAAF00107E72 /* OoniReportingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OoniReportingController.swift; sourceTree = "<group>"; };
 		4691AE7D1F35576600BD8CB4 /* OperatorReportingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OperatorReportingController.swift; sourceTree = "<group>"; };
+		4691AE7F1F38F8B900BD8CB4 /* run.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = run.sh; sourceTree = "<group>"; };
+		4691AE801F38F90800BD8CB4 /* build.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build.sh; sourceTree = "<group>"; };
 		46B1F3CC1F213613000895EF /* PrintableExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrintableExtension.swift; sourceTree = "<group>"; };
 		46B1F3CE1F214E63000895EF /* OoniNewReportResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OoniNewReportResponse.swift; sourceTree = "<group>"; };
 		46C223BE1F05B4CD00770BCE /* OoniNewReportRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OoniNewReportRequest.swift; sourceTree = "<group>"; };
@@ -229,7 +231,9 @@
 		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
+				4691AE801F38F90800BD8CB4 /* build.sh */,
 				OBJ_6 /* Package.swift */,
+				4691AE7F1F38F8B900BD8CB4 /* run.sh */,
 				OBJ_7 /* Sources */,
 				OBJ_18 /* Tests */,
 				OBJ_19 /* Resources */,

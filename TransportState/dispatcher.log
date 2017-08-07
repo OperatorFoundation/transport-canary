@@ -9707,3 +9707,10 @@
 2017/07/25 23:08:26 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
 2017/07/25 23:08:26 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
 2017/07/25 23:08:26 [ERROR]: shapeshifter-dispatcher - transparent mode requires a target
+2017/08/07 11:39:02 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/08/07 11:39:02 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/08/07 11:39:02 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/08/07 11:39:02 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/08/07 11:39:02 [INFO]: obfs4 - registered listener: 127.0.0.1:1234
+2017/08/07 11:39:02 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/08/07 11:39:08 [NOTICE]: shapeshifter-dispatcher - terminated
