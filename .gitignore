@@ -1,6 +1,6 @@
 .DS_Store
 /.build
 /Packages
-/*.xcodeproj
+/dispatcher.log
 /.packages_lin
 /Resources/auth.up
