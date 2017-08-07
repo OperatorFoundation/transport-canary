@@ -78,6 +78,8 @@ class OpenVPNController
         
         //Arguments
         let openVpnArguments = connectToOpenVPNArguments(configFilePath: configFilePath)
+        
+        print("OpenVPN Arguments:\n\(openVpnArguments)")
 
         runOpenVpnScript(openVPNFilePath, logDirectory: configFilePath, arguments: openVpnArguments)
         sleep(2)
@@ -178,12 +180,25 @@ class OpenVPNController
         //Arguments will pass the arguments to the executable, as though typed directly into terminal.
         OpenVPNController.connectTask.arguments = arguments
         
+        print("OpenVPN Arguments2:\n\(arguments)")
+        print("Launch path: \(path)")
+        
         //Go ahead and launch the process/task
-        OpenVPNController.connectTask.launch()
+        //OpenVPNController.connectTask.launch()
+        
+        do
+        {
+            try OpenVPNController.connectTask.launch()
+        }
+        catch
+        {
+            print("Error launching openvpn: \(error.localizedDescription)")
+        }
     }
     
     func connectToManagement() -> Bool
     {
+        print("Attempting to connect to management server.")
         maybeSyncSocket = SyncSocket.connect(host: hostIPString, port: port)
         guard let syncSocket = maybeSyncSocket else
         {
