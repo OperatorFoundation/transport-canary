@@ -4,3 +4,5 @@
 /dispatcher.log
 /.packages_lin
 /Resources/auth.up
+
+*.xcuserstate
