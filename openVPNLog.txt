@@ -1,6 +1,17 @@
-Thu Jun  8 13:47:16 2017 OpenVPN 2.3.12 x86_64-apple-darwin [SSL (OpenSSL)] [LZO] [PKCS11] [MH] [IPv6] built on Oct  9 2016
-Thu Jun  8 13:47:16 2017 library versions: OpenSSL 1.0.2j  26 Sep 2016, LZO 2.09
-Thu Jun  8 13:47:16 2017 WARNING: file 'Resources/auth.up' is group or others accessible
-Thu Jun  8 13:47:16 2017 WARNING: No server certificate verification method has been enabled.  See http://openvpn.net/howto.html#mitm for more info.
-Thu Jun  8 13:47:16 2017 SIGUSR1[soft,private-key-password-failure] received, process restarting
-Thu Jun  8 13:47:16 2017 SIGTERM[hard,init_instance] received, process exiting
+Mon Aug  7 15:16:52 2017 WARNING: file 'Resources/keys/Wdc.key' is group or others accessible
+Mon Aug  7 15:16:52 2017 WARNING: file 'Resources/auth.up' is group or others accessible
+Mon Aug  7 15:16:52 2017 OpenVPN 2.4.2 x86_64-apple-darwin16.5.0 [SSL (OpenSSL)] [LZO] [LZ4] [PKCS11] [MH/RECVDA] [AEAD] built on May 18 2017
+Mon Aug  7 15:16:52 2017 library versions: OpenSSL 1.0.2l  25 May 2017, LZO 2.10
+Mon Aug  7 15:16:52 2017 RESOLVE: Cannot resolve host address: ar1-ovpn-tcp.pointtoserver.com:80 (nodename nor servname provided, or not known)
+Mon Aug  7 15:16:52 2017 RESOLVE: Cannot resolve host address: ar1-ovpn-tcp.pointtoserver.com:80 (nodename nor servname provided, or not known)
+Mon Aug  7 15:16:52 2017 Could not determine IPv4/IPv6 protocol
+Mon Aug  7 15:16:52 2017 SIGUSR1[soft,init_instance] received, process restarting
+Mon Aug  7 15:16:57 2017 RESOLVE: Cannot resolve host address: ar1-ovpn-tcp.pointtoserver.com:80 (nodename nor servname provided, or not known)
+Mon Aug  7 15:16:57 2017 RESOLVE: Cannot resolve host address: ar1-ovpn-tcp.pointtoserver.com:80 (nodename nor servname provided, or not known)
+Mon Aug  7 15:16:57 2017 Could not determine IPv4/IPv6 protocol
+Mon Aug  7 15:16:57 2017 SIGUSR1[soft,init_instance] received, process restarting
+Mon Aug  7 15:17:02 2017 RESOLVE: Cannot resolve host address: ar1-ovpn-tcp.pointtoserver.com:80 (nodename nor servname provided, or not known)
+Mon Aug  7 15:17:02 2017 RESOLVE: Cannot resolve host address: ar1-ovpn-tcp.pointtoserver.com:80 (nodename nor servname provided, or not known)
+Mon Aug  7 15:17:02 2017 Could not determine IPv4/IPv6 protocol
+Mon Aug  7 15:17:02 2017 SIGUSR1[soft,init_instance] received, process restarting
+Mon Aug  7 15:17:05 2017 SIGTERM[hard,init_instance] received, process exiting

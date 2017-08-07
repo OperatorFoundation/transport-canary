@@ -79,10 +79,14 @@ class OpenVPNController
         //Arguments
         let openVpnArguments = connectToOpenVPNArguments(configFilePath: configFilePath)
         
-        print("OpenVPN Arguments:\n\(openVpnArguments)")
-
         runOpenVpnScript(openVPNFilePath, logDirectory: configFilePath, arguments: openVpnArguments)
         sleep(2)
+        
+        guard OpenVPNController.connectTask.isRunning
+            else
+        {
+            return false
+        }
         
         let connected = connectToManagement() && self.areWeConnected()
 //        if !connected
@@ -140,9 +144,9 @@ class OpenVPNController
         //List of arguments for Process/Task
         var processArguments: [String] = []
         
-//        //Specify the log file path
-//        processArguments.append("--log")
-//        processArguments.append("openVPNLog.txt")
+        //Specify the log file path
+        processArguments.append("--log")
+        processArguments.append("openVPNLog.txt")
         
         //Verbosity of Output
         processArguments.append("--verb")
