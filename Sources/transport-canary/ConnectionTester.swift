@@ -20,9 +20,8 @@ class ConnectionTester
         self.configFileName = configFileName
         self.serverName = configFileName.replacingOccurrences(of: "-tcp.ovpn", with: "")
         
-        if let countryCode = DatabaseController.sharedInstance.queryForServerCC(serverName: self.serverName)
+        if let country = DatabaseController.sharedInstance.queryForServerCountry(serverName: self.serverName)
         {
-            let country = Country(code: countryCode)
             let flag = country.emojiFlag
             print("\(flag) \(flag) \(flag) \(flag)  Testing \(self.serverName) \(flag) \(flag) \(flag) \(flag)")
         }
@@ -129,13 +128,13 @@ class ConnectionTester
         let asn = "AS\(rawASN)"
         
         //Country code comes from our servers table.
-        guard let countryCode = DatabaseController.sharedInstance.queryForServerCC(serverName: serverName)
+        guard let country = DatabaseController.sharedInstance.queryForServerCountry(serverName: serverName)
             else
         {
             return (nil, nil)
         }
         
-        return (asn, countryCode)
+        return (asn, country.code)
     }
 
 }

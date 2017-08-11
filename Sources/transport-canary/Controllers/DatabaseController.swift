@@ -62,17 +62,12 @@ class DatabaseController
     init()
     {
         //If the table doesn't exist, create it
-        //TODO: This is a Meta-Command not a sql statement, currently it will always return 0 records
         if let tablesInDBResponse = queryDB(statement: "select * from information_schema.tables where table_schema='public';")
         {
             let numberOfRows = tablesInDBResponse.numTuples()
             var serversTableExists = false
             var testResultsTableExists = false
-//            print("📋📋📋📋📋  Queried DB for all public tables 📋📋📋📋📋")
-//            print("servers numFields: \(tablesInDBResponse.numFields())")
-//            print("servers numTuples: \(tablesInDBResponse.numTuples())")
-//            print("servers query status: \(tablesInDBResponse.status())")
-//            print("servers query error: \(tablesInDBResponse.errorMessage())")
+
             for x in 0..<numberOfRows
             {
                 if let tableName = tablesInDBResponse.getFieldString(tupleIndex: x, fieldIndex: 2)
@@ -185,73 +180,66 @@ class DatabaseController
     }
     
     
-    func queryForServerCC(serverName: String) -> String?
+    func queryForServerCountry(serverName: String) -> Country?
     {
-        var countryCode: String?
-        
-        let status = postGresConnection.connectdb(dbInfo)
-        defer
+        if let result = queryDB(statement: "select \(ServersTable.countryCodeKey), \(ServersTable.countryKey) from \(ServersTable.name) where \(ServersTable.serverNameKey) = \'\(serverName)\'")
         {
-            postGresConnection.finish()
+            let numberOfRows = result.numTuples()
+            
+            if numberOfRows > 0
+            {
+                if let cc = result.getFieldString(tupleIndex: 0, fieldIndex: 0),
+                    let name = result.getFieldString(tupleIndex: 0, fieldIndex: 1)
+                {
+                    result.clear()
+                    return Country(code: cc, name: name)
+                }
+            }
         }
-        if status == .bad
-        {
-            return nil
-        }
-        
-        let result = postGresConnection.exec(statement: "select \(ServersTable.countryCodeKey) from \(ServersTable.name) where \(ServersTable.serverNameKey) = \'\(serverName)\'")
-        
-        let numberOfRows = result.numTuples()
-        
-        if numberOfRows > 0
-        {
-            let cc = result.getFieldString(tupleIndex: 0, fieldIndex: 0)
-            countryCode = cc
-        }
-        
-        result.clear()
-        postGresConnection.close()
-        return countryCode
+
+        return nil
     }
     
     func queryForServerInfo()
     {
-        let status = postGresConnection.connectdb(dbInfo)
-        defer
+        if let result = queryDB(statement: "select * from \(ServersTable.name)")
         {
-            postGresConnection.finish()
+            let numberOfRows = result.numTuples()
+            print("There are \(numberOfRows) servers listed in the servers table.")
+            
+            result.clear()
         }
-        if status == .bad
+    }
+    
+    func queryForDistinctCountries() -> [Country]?
+    {
+        guard let result = queryDB(statement: "select distinct \(ServersTable.countryKey), \(ServersTable.countryCodeKey)  from \(ServersTable.name)")
+            else
         {
-            return
+            return nil
         }
         
-        let result = postGresConnection.exec(statement: "select * from \(ServersTable.name)")
+        let rows = result.numTuples()
         
-        let numberOfRows = result.numTuples()
-        print("There are \(numberOfRows) servers listed in the servers table.")
-//        for x in 0..<numberOfRows
-//        {
-//            print("Servers:")
-//            
-//            if let serverName = result.getFieldString(tupleIndex: x, fieldIndex: 0)
-//            {
-//                //print("Name - \(serverName)")
-//            }
-//            
-//            if let country = result.getFieldString(tupleIndex: x, fieldIndex: 1)
-//            {
-//                print("Country - \(country)")
-//            }
-//            
-//            if let serverNumber = result.getFieldInt(tupleIndex: x, fieldIndex: 2)
-//            {
-//                print("Server Number - \(serverNumber)")
-//            }
-//        }
-        
-        result.clear()
-        postGresConnection.close()
+        var countries = [Country]()
+        for x in 0..<rows
+        {
+            if let cc = result.getFieldString(tupleIndex: x, fieldIndex: 1),
+                let name = result.getFieldString(tupleIndex: x, fieldIndex: 0)
+            {
+                let aCountry = Country(code: cc, name: name)
+                countries.append(aCountry)
+            }
+        }
+            
+        if countries.isEmpty
+        {
+            return nil
+        }
+        else
+        {
+            return countries
+        }
     }
     
     func queryDB(statement: String) -> PGResult?
@@ -267,6 +255,7 @@ class DatabaseController
         }
         
         let result = postGresConnection.exec(statement: statement)
+        postGresConnection.close()
         
         return result
     }

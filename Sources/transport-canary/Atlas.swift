@@ -1,10 +1,12 @@
 struct Country
 {
     let code: String
+    let name: String
     
-    init(code: String)
+    init(code: String, name: String)
     {
         self.code = code.uppercased()
+        self.name = name.capitalized
     }
     
     var emojiFlag: String

@@ -6,3 +6,9 @@
 /Resources/auth.up
 
 *.xcuserstate
+
+TransportState/dispatcher.log
+
+openVPNLog.txt
+
+transport-canary.xcodeproj/project.xcworkspace/xcuserdata/Lita.xcuserdatad/UserInterfaceState.xcuserstate

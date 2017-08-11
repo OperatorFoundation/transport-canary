@@ -15,6 +15,8 @@ import Quartz
 class OperatorReportingController
 {
     static let sharedInstance = OperatorReportingController()
+    let formatter = ISO8601DateFormatter()
+    
     var dayTableRows = ""
     
     func createReportTextFile()
@@ -60,7 +62,7 @@ class OperatorReportingController
     
     func getReportTextFileName() -> String
     {
-        let formatter = ISO8601DateFormatter()
+        
         formatter.timeZone = TimeZone.current
         formatter.formatOptions = [.withFullDate,
                                    .withTime,
@@ -73,7 +75,6 @@ class OperatorReportingController
     func generateReportContent() -> String
     {
         //Today's date as string
-        let formatter = ISO8601DateFormatter()
         formatter.timeZone = TimeZone.current
         formatter.formatOptions = [.withFullDate,
                                    .withTime,
@@ -89,55 +90,53 @@ class OperatorReportingController
         
         let reportDate = "\(now)\n\n"
         
-        //1 Day Results
-        let dayTableHeader = "### This Day\n"
-        let tableFields = "| Server   | Transport  | Success Rate  | Failure Rate  |\n| :------------- | :------------- | :------------- | :------------- |\n"
-        
-        //Populate the day table.
-        
-        //Placeholder
-        var dayTableValues = "| serverValue| transportValue | successRateValue | failureRateValue |\n"
-        
-        //Actual Data
-        if !dayTableRows.isEmpty
+        var countryTables = [String]()
+        if let countries = DatabaseController.sharedInstance.queryForDistinctCountries()
         {
-            dayTableValues = dayTableRows
+            print("Got a list of distinct countries, we're building a report y'all!")
+            for thisCountry in countries
+            {
+                let countryTable = generateCountryTable(country: thisCountry)
+                countryTables.append(countryTable)
+            }
+            
+            return reportHeader + reportDate + countryTables.joined()
         }
+        else
+        {
+            print("Tried to get a list of countries, but we failed.")
+            
+            return reportHeader + reportDate
+        }
+    }
+    
+    func generateCountryTable(country: Country) -> String
+    {
+        //Put a flag on it 🕊
+        let tableHeader = "\n### \(country.emojiFlag) \(country.name) \(country.emojiFlag)\n"
         
-        //7 Day Results
-        let weekTableHeader = "\n### Last 7 Days\n"
-        //| Server   | Transport  | Success Rate  | Failure Rate  |
-        //| :------------- | :------------- | :------------- | :------------- |
-        let weekTableRow = "| serverValue| transportValue | successRateValue | failureRateValue |\n"
-        
-        //30 Day results
-        let monthTableHeader = "\n### Last 30 Days\n"
-        //| Server   | Transport  | Success Rate  | Failure Rate  |
-        //| :------------- | :------------- | :------------- | :------------- |
-        let monthTableRow = "| serverValue| transportValue | successRateValue | failureRateValue |\n"
+        let tableFields = "| Transport   | Success Rate Today | Success Rate Last 7 Days  | Success Rate Last 30 Days  |/n| :------------- | :------------- | :------------- | :------------- |"
+        let tableValues = "| transportName| successRate1Day | successRate7Days | successRate30Days |\n"
         
         //Put it all together and what do you get? m;)
-        return reportHeader + reportDate + dayTableHeader + tableFields + dayTableValues + weekTableHeader + tableFields + weekTableRow + monthTableHeader + tableFields + monthTableRow
+        return tableHeader + tableFields + tableValues
     }
     
     func addDayRow(testResult: TestResult)
     {
         var successRate = "0%"
-        var failureRate = "0%"
         
         switch testResult.success
         {
             case false:
-                failureRate = "100%"
+                successRate = "0%"
             case true:
                 successRate = "%100"
         }
         
-        //Put a flag on it 🕊
-        let country = Country(code: testResult.probeCC)
-        let flag = country.emojiFlag
         
-        let newRow = "| \(flag) \(testResult.serverName)| \(testResult.transport) | \(successRate) | \(failureRate) |\n"
+        
+        let newRow = "| \(testResult.serverName)| \(testResult.transport) | \(successRate) | nada |\n"
         
         dayTableRows.append(newRow)
     }
