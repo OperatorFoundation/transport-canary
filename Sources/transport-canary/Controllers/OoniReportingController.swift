@@ -12,7 +12,7 @@ class OoniReportingController
 {
     static let sharedInstance = OoniReportingController()
     
-    let ooniURLString = "https://b.collector.ooni.io/"
+    let ooniURLString = "http://192.34.59.32:10080/" //"https://b.collector.ooni.io/"
     let session = URLSession(configuration: .default)
     var dataTask: URLSessionDataTask? = nil
     

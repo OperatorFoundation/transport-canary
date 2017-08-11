@@ -12,8 +12,9 @@ class ShapeshifterController
 {
     private var launchTask: Process?
     let ptServerPort = "1234"
-    let shsocksServerPort = "4321"
+    let shsocksServerPort = "2345"
     let serverIPFilePath = "Resources/serverIP"
+    let shSocksServerIPFilePath = "Resources/shSocksServerIP"
     let obfs4OptionsPath = "Resources/obfs4.json"
     let meekOptionsPath = "Resources/meek.json"
     let shSocksOptionsPath = "Resources/shadowsocks.json"
@@ -110,9 +111,18 @@ class ShapeshifterController
                 {
                     options = getShadowSocksOptions()
                     
-                    //If shSocks use special port
-                    processArguments.append("-target")
-                    processArguments.append("\(serverIP):\(shsocksServerPort)")
+                    //If shSocks use special port and IP
+                    do
+                    {
+                        let shSocksServerIP = try String(contentsOfFile: shSocksServerIPFilePath, encoding: String.Encoding.ascii)
+                        processArguments.append("-target")
+                        processArguments.append("\(shSocksServerIP):\(shsocksServerPort)")
+                    }
+                    catch
+                    {
+                        print("Could not run shadow socks test: Could not find server IP.")
+                        return nil
+                    }
                 }
                 
                 if options == nil

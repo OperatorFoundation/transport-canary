@@ -9721,3 +9721,207 @@
 2017/08/07 15:16:37 [INFO]: obfs4 - registered listener: 127.0.0.1:1234
 2017/08/07 15:16:37 [INFO]: shapeshifter-dispatcher - accepting connections
 2017/08/07 15:16:44 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/08/10 19:55:39 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/08/10 19:55:39 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/08/10 19:55:39 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/08/10 19:55:39 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/08/10 19:55:39 [INFO]: obfs4 - registered listener: 127.0.0.1:1234
+2017/08/10 19:55:39 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/08/10 19:55:48 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/08/10 19:56:10 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/08/10 19:56:10 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/08/10 19:56:10 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/08/10 19:56:10 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/08/10 19:56:10 [INFO]: obfs4 - registered listener: 127.0.0.1:1234
+2017/08/10 19:56:10 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/08/10 19:56:15 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/08/10 20:11:59 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/08/10 20:11:59 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/08/10 20:11:59 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/08/10 20:11:59 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/08/10 20:11:59 [INFO]: shadowsocks - registered listener: 127.0.0.1:1234
+2017/08/10 20:11:59 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/08/10 20:12:02 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:12:02 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:12:02 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:12:06 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/08/10 20:12:21 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/08/10 20:12:21 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/08/10 20:12:21 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/08/10 20:12:21 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/08/10 20:12:21 [INFO]: shadowsocks - registered listener: 127.0.0.1:1234
+2017/08/10 20:12:21 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/08/10 20:12:23 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:12:23 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:12:23 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:12:27 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/08/10 20:13:55 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/08/10 20:13:55 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/08/10 20:13:55 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/08/10 20:13:55 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/08/10 20:13:55 [INFO]: shadowsocks - registered listener: 127.0.0.1:1234
+2017/08/10 20:13:55 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/08/10 20:13:57 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:13:57 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:13:57 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:14:01 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/08/10 20:14:45 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/08/10 20:14:45 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/08/10 20:14:45 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/08/10 20:14:45 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/08/10 20:14:45 [INFO]: shadowsocks - registered listener: 127.0.0.1:1234
+2017/08/10 20:14:45 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/08/10 20:14:47 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:14:47 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:14:47 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:14:51 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/08/10 20:15:07 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/08/10 20:15:07 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/08/10 20:15:07 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/08/10 20:15:07 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/08/10 20:15:07 [INFO]: shadowsocks - registered listener: 127.0.0.1:1234
+2017/08/10 20:15:07 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/08/10 20:15:08 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:15:08 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:15:08 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:15:12 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/08/10 20:15:29 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/08/10 20:15:29 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/08/10 20:15:29 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/08/10 20:15:29 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/08/10 20:15:29 [INFO]: shadowsocks - registered listener: 127.0.0.1:1234
+2017/08/10 20:15:29 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/08/10 20:15:32 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:15:32 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:15:32 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:15:36 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/08/10 20:15:58 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/08/10 20:15:58 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/08/10 20:15:58 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/08/10 20:15:58 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/08/10 20:15:58 [INFO]: shadowsocks - registered listener: 127.0.0.1:1234
+2017/08/10 20:15:58 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/08/10 20:16:02 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:16:02 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:16:02 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:16:06 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/08/10 20:16:56 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/08/10 20:16:56 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/08/10 20:16:56 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/08/10 20:16:56 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/08/10 20:16:56 [INFO]: shadowsocks - registered listener: 127.0.0.1:1234
+2017/08/10 20:16:56 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/08/10 20:17:01 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:17:01 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:17:01 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:17:05 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/08/10 20:17:26 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/08/10 20:17:26 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/08/10 20:17:26 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/08/10 20:17:26 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/08/10 20:17:26 [INFO]: shadowsocks - registered listener: 127.0.0.1:1234
+2017/08/10 20:17:26 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/08/10 20:17:30 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:17:30 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:17:30 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:17:35 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/08/10 20:17:57 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/08/10 20:17:57 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/08/10 20:17:57 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/08/10 20:17:57 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/08/10 20:17:57 [INFO]: shadowsocks - registered listener: 127.0.0.1:1234
+2017/08/10 20:17:57 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/08/10 20:18:02 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:18:02 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:18:02 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:18:06 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/08/10 20:18:28 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/08/10 20:18:28 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/08/10 20:18:28 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/08/10 20:18:28 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/08/10 20:18:28 [INFO]: shadowsocks - registered listener: 127.0.0.1:1234
+2017/08/10 20:18:28 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/08/10 20:18:30 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:18:30 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:18:30 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:18:34 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/08/10 20:18:52 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/08/10 20:18:52 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/08/10 20:18:52 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/08/10 20:18:52 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/08/10 20:18:52 [INFO]: shadowsocks - registered listener: 127.0.0.1:1234
+2017/08/10 20:18:52 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/08/10 20:18:54 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:18:54 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:18:54 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:18:58 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/08/10 20:19:15 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/08/10 20:19:15 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/08/10 20:19:15 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/08/10 20:19:15 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/08/10 20:19:15 [INFO]: shadowsocks - registered listener: 127.0.0.1:1234
+2017/08/10 20:19:15 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/08/10 20:19:17 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:19:17 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:19:17 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:19:21 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/08/10 20:19:39 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/08/10 20:19:39 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/08/10 20:19:39 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/08/10 20:19:39 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/08/10 20:19:39 [INFO]: shadowsocks - registered listener: 127.0.0.1:1234
+2017/08/10 20:19:39 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/08/10 20:19:42 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:19:42 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:19:42 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:19:46 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/08/10 20:20:03 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/08/10 20:20:03 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/08/10 20:20:03 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/08/10 20:20:03 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/08/10 20:20:03 [INFO]: shadowsocks - registered listener: 127.0.0.1:1234
+2017/08/10 20:20:03 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/08/10 20:20:05 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:20:05 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:20:05 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:20:09 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/08/10 20:20:28 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/08/10 20:20:28 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/08/10 20:20:28 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/08/10 20:20:28 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/08/10 20:20:28 [INFO]: shadowsocks - registered listener: 127.0.0.1:1234
+2017/08/10 20:20:28 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/08/10 20:20:30 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:20:30 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:20:30 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:20:34 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/08/10 20:21:19 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/08/10 20:21:19 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/08/10 20:21:19 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/08/10 20:21:19 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/08/10 20:21:19 [INFO]: shadowsocks - registered listener: 127.0.0.1:1234
+2017/08/10 20:21:19 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/08/10 20:21:22 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:21:22 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:21:22 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:21:26 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/08/10 20:21:43 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/08/10 20:21:43 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/08/10 20:21:43 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/08/10 20:21:43 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/08/10 20:21:43 [INFO]: shadowsocks - registered listener: 127.0.0.1:1234
+2017/08/10 20:21:43 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/08/10 20:21:46 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:21:46 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:21:46 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:21:50 [NOTICE]: shapeshifter-dispatcher - terminated
+2017/08/10 20:22:08 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/08/10 20:22:08 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/08/10 20:22:08 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/08/10 20:22:08 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/08/10 20:22:08 [INFO]: shadowsocks - registered listener: 127.0.0.1:1234
+2017/08/10 20:22:08 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/08/10 20:22:11 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:22:11 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:22:11 [ERROR]: Unknown transport: shadowsocks
+2017/08/10 20:22:16 [NOTICE]: shapeshifter-dispatcher - terminated
