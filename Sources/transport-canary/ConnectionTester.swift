@@ -60,12 +60,6 @@ class ConnectionTester
                         
                         ///Generate Test Result
                         result = TestResult.init(serverName: serverName, testDate: Date(), transport: transport, success: success, probeASN: probeASN, probeCC: probeCC)
-                        
-                        //This approach is for immediate testing purposes. We will need to gather results from the DB to accurately reflect any and all tests run on a given day.
-                        if result != nil
-                        {
-                            OperatorReportingController.sharedInstance.addDayRow(testResult: result!)
-                        }
                     }
                     else
                     {

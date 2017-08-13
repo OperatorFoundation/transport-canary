@@ -49,7 +49,7 @@ class BatchTestController
                     print("Added to database = \(addRecordSuccess)")
                     
                     //Ooni Reporting
-                    //reportToOoni(testResult: testResult)
+                    reportToOoni(testResult: testResult)
                     
                     
                     if testResult.success

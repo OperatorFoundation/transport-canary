@@ -4,9 +4,12 @@ import Foundation
 var first = true
 let configs = Dir("Resources/config")
 let keys = Dir("Resources/keys")
-var obfs4 = "obfs4"
-var meek = "meek"
-var shadowsocks = "shadowsocks"
+
+//Transports
+let obfs4 = "obfs4"
+let meek = "meek"
+let shadowsocks = "shadowsocks"
+let allTransports = [obfs4, meek, shadowsocks]
 
 signal(SIGINT)
 {

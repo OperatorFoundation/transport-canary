@@ -9,6 +9,7 @@
 import Foundation
 import Cocoa
 import Quartz
+
 /**
  This class is for Operator Foundation Reporting
  */
@@ -17,7 +18,9 @@ class OperatorReportingController
     static let sharedInstance = OperatorReportingController()
     let formatter = ISO8601DateFormatter()
     
-    var dayTableRows = ""
+    var testResults7Days: [TestResult]?
+    var testResults30Days: [TestResult]?
+    var testResultsToday: [TestResult]?
     
     func createReportTextFile()
     {
@@ -36,7 +39,8 @@ class OperatorReportingController
         let filePath =  folderPath + fileName + fileExtension
         
         let report = generateReportContent()
-        let fileData = report.data(using: .ascii)
+        //print(report)
+        let fileData = report.data(using: .utf8)
         
         //If the file doesn't exist create it
         if !fileManager.fileExists(atPath: folderPath)
@@ -74,6 +78,11 @@ class OperatorReportingController
     
     func generateReportContent() -> String
     {
+        //Get the data from our testresults table
+        testResults7Days = DatabaseController.sharedInstance.queryForTestResults(numberOfDays: 7)
+        testResults30Days = DatabaseController.sharedInstance.queryForTestResults(numberOfDays: 30)
+        testResultsToday = DatabaseController.sharedInstance.queryForTestResults(numberOfDays: 1)
+        
         //Today's date as string
         formatter.timeZone = TimeZone.current
         formatter.formatOptions = [.withFullDate,
@@ -86,21 +95,20 @@ class OperatorReportingController
         let now = formatter.string(from: Date())
         
         //Format with markdown because pretty.
-        let reportHeader = "## CanaryStatusReport\n\n"
+        let reportHeader = "## Transport Canary Status Report\n\n"
         
         let reportDate = "\(now)\n\n"
         
         var countryTables = [String]()
         if let countries = DatabaseController.sharedInstance.queryForDistinctCountries()
         {
-            print("Got a list of distinct countries, we're building a report y'all!")
             for thisCountry in countries
             {
                 let countryTable = generateCountryTable(country: thisCountry)
                 countryTables.append(countryTable)
             }
-            
-            return reportHeader + reportDate + countryTables.joined()
+            let countryTablesString = countryTables.joined()
+            return reportHeader + reportDate + countryTablesString
         }
         else
         {
@@ -115,29 +123,116 @@ class OperatorReportingController
         //Put a flag on it 🕊
         let tableHeader = "\n### \(country.emojiFlag) \(country.name) \(country.emojiFlag)\n"
         
-        let tableFields = "| Transport   | Success Rate Today | Success Rate Last 7 Days  | Success Rate Last 30 Days  |/n| :------------- | :------------- | :------------- | :------------- |"
-        let tableValues = "| transportName| successRate1Day | successRate7Days | successRate30Days |\n"
+        let tableFields = "| Transport   | Success Rate Today | Success Rate Last 7 Days  | Success Rate Last 30 Days  |\n| :------------- | :------------- | :------------- | :------------- |\n"
+        
+        var tableValues = ""
+        
+        //Sort results so that each set only contains results for this country.
+        var last7DaysResults = [TestResult]()
+        var last30DaysResults = [TestResult]()
+        var todayResults = [TestResult]()
+        
+        if let results7ForCountry = testResults7Days?.filter({$0.probeCC == country.code})
+        {
+            last7DaysResults = results7ForCountry
+        }
+        if let results30ForCountry = testResults30Days?.filter({$0.probeCC == country.code})
+        {
+            last30DaysResults = results30ForCountry
+        }
+        if let resultsTodayForCountry = testResultsToday?.filter({$0.probeCC == country.code})
+        {
+            todayResults = resultsTodayForCountry
+        }
+
+        //Create a row for each transport we test.
+        for transport in allTransports
+        {
+            //Last 7 days for this transport.
+            var successRate7Days = "--"
+            var transportResults7Days = [TestResult]()
+            for result in last7DaysResults
+            {
+                if result.transport == transport
+                {
+                    transportResults7Days.append(result)
+                }
+            }
+            
+            if !transportResults7Days.isEmpty
+            {
+                let numberOfTests = transportResults7Days.count
+                let successes = transportResults7Days.filter({$0.success})
+                if successes.isEmpty
+                {
+                    successRate7Days = "0%"
+                }
+                else
+                {
+                    let numberOfSuccesses = successes.count
+                    successRate7Days = String(100/(numberOfTests/numberOfSuccesses)) + "%"
+                }
+            }
+            
+            //Last 30 days for this transport.
+            var successRate30Days = "--"
+            var transportResults30Days = [TestResult]()
+            for result in last30DaysResults
+            {
+                if result.transport == transport
+                {
+                    transportResults30Days.append(result)
+                }
+            }
+            
+            if !transportResults30Days.isEmpty
+            {
+                let numberOfTests = transportResults30Days.count
+                let successes = transportResults30Days.filter({$0.success})
+                if successes.isEmpty
+                {
+                    successRate30Days = "0%"
+                }
+                else
+                {
+                    let numberOfSuccesses = successes.count
+                    successRate30Days = String(100/(numberOfTests/numberOfSuccesses)) + "%"
+                }
+            }
+            
+            //Last day for this transport.
+            var successRate1Day = "--"
+            var transportResultsToday = [TestResult]()
+            for result in todayResults
+            {
+                if result.transport == transport
+                {
+                    transportResultsToday.append(result)
+                }
+            }
+            
+            if !transportResultsToday.isEmpty
+            {
+                let numberOfTests = transportResultsToday.count
+                let successes = transportResultsToday.filter({$0.success})
+                if successes.isEmpty
+                {
+                    successRate1Day = "0%"
+                }
+                else
+                {
+                    let numberOfSuccesses = successes.count
+                    successRate1Day = String(100/(numberOfTests/numberOfSuccesses)) + "%"
+                }
+            }
+            
+            let rowValues = "| \(transport)| \(successRate1Day) | \(successRate7Days) | \(successRate30Days) |\n"
+
+            tableValues += rowValues
+        }
         
         //Put it all together and what do you get? m;)
         return tableHeader + tableFields + tableValues
     }
-    
-    func addDayRow(testResult: TestResult)
-    {
-        var successRate = "0%"
-        
-        switch testResult.success
-        {
-            case false:
-                successRate = "0%"
-            case true:
-                successRate = "%100"
-        }
-        
-        
-        
-        let newRow = "| \(testResult.serverName)| \(testResult.transport) | \(successRate) | nada |\n"
-        
-        dayTableRows.append(newRow)
-    }
+
 }

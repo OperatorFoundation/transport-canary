@@ -14,6 +14,7 @@ class DatabaseController
     static let sharedInstance = DatabaseController()
     let postGresConnection = PGConnection()
     let dbInfo = "host=localhost dbname=canarydb user=canaryoperator password=canaryoperator"
+    let dateFormatter = DateFormatter()
     
     struct ServersTable
     {
@@ -39,6 +40,7 @@ class DatabaseController
         static let name = "testresults"
         
         static let testDateFormat = "yyyy-MM-dd HH:mm:ss ZZZ"
+        static let queryResponseDateFormat = "yyyy-MM-dd HH:mm:ssx"
         
         static let serverNameKey = "servername"
         static let testDateKey = "testdate"
@@ -64,6 +66,8 @@ class DatabaseController
         //If the table doesn't exist, create it
         if let tablesInDBResponse = queryDB(statement: "select * from information_schema.tables where table_schema='public';")
         {
+            dateFormatter.timeZone = TimeZone.init(abbreviation: "UTC")
+            
             let numberOfRows = tablesInDBResponse.numTuples()
             var serversTableExists = false
             var testResultsTableExists = false
@@ -213,7 +217,7 @@ class DatabaseController
     
     func queryForDistinctCountries() -> [Country]?
     {
-        guard let result = queryDB(statement: "select distinct \(ServersTable.countryKey), \(ServersTable.countryCodeKey)  from \(ServersTable.name)")
+        guard let result = queryDB(statement: "select distinct \(ServersTable.countryKey), \(ServersTable.countryCodeKey)  from \(ServersTable.name) order by \(ServersTable.countryKey)")
             else
         {
             return nil
@@ -242,6 +246,48 @@ class DatabaseController
         }
     }
     
+    func queryForTestResults(numberOfDays:Int) ->[TestResult]?
+    {
+        guard let result = queryDB(statement: "select * from \(TestResultsTable.name) where \(TestResultsTable.testDateKey)>=now() - interval \'\(String(numberOfDays)) days\'")
+            else
+        {
+            return nil
+        }
+        
+        var testResults = [TestResult]()
+        
+        let rows = result.numTuples()
+        
+        print(rows)
+        for x in 0..<rows
+        {
+            // | servername | testdate | success | transport | probeasn | probecc |
+            if let serverName = result.getFieldString(tupleIndex: x, fieldIndex: 0),
+                let testDateString = result.getFieldString(tupleIndex: x, fieldIndex: 1),
+                let success = result.getFieldBool(tupleIndex: x, fieldIndex: 2),
+                let transport = result.getFieldString(tupleIndex: x, fieldIndex: 3),
+                let probeASN = result.getFieldString(tupleIndex: x, fieldIndex: 4),
+                let cc = result.getFieldString(tupleIndex: x, fieldIndex: 5)
+            {
+                dateFormatter.dateFormat = TestResultsTable.queryResponseDateFormat
+                if let testDate = dateFormatter.date(from: testDateString)
+                {
+                    let newTestResult = TestResult.init(serverName: serverName, testDate: testDate, transport: transport, success: success, probeASN: probeASN, probeCC: cc)
+                    testResults.append(newTestResult)
+                }
+            }
+        }
+        
+        if testResults.isEmpty
+        {
+            return nil
+        }
+        else
+        {
+            return testResults
+        }
+    }
+    
     func queryDB(statement: String) -> PGResult?
     {
         let status = postGresConnection.connectdb(dbInfo)
@@ -262,11 +308,7 @@ class DatabaseController
     
     func insert(testResult: TestResult) -> Bool
     {
-        //Filler, need to research the best way to handle the dates.
-        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = TestResultsTable.testDateFormat
-        dateFormatter.timeZone = TimeZone.init(abbreviation: "UTC")
-        
         let testDateString = dateFormatter.string(from: testResult.testDate)
         
         let status = postGresConnection.connectdb(dbInfo)
