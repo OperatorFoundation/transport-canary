@@ -13,7 +13,7 @@ class ConnectionTester
     let configDirectoryPath = "Resources/config"
     let openVPNExecutablePath = "Resources/openvpn"
     var serverName: String
-    var configFileName: String
+    var configFileName: String?
     
     init(configFileName: String)
     {
@@ -34,7 +34,9 @@ class ConnectionTester
     }
     
     func runTest(forTransport transport: String) -> TestResult?
-    {        
+    {
+        //If no config file run this without launching or cleaning up openvpn
+        
         //Config File
         let configPath = configDirectoryPath + "/\(configFileName)"
         var result: TestResult?

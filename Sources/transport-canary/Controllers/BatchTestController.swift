@@ -27,6 +27,9 @@ class BatchTestController
             var failedTests = [TestResult]()
             var successfulTests = [TestResult]()
             var serversNotTested = [String]()
+            //TODO: Run this with a tester that has a nil config file
+            //
+            //We want to know if our transport server is working before getting oVPN involved and running a whole batch of tests.
             
             try configs.forEachEntry(closure:
             {
