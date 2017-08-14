@@ -28,6 +28,7 @@ class ConnectionTester
         else
         {
             print("💥💥💥💥💥💥  Testing \(self.serverName) 💥💥💥💥💥")
+            print("IS YOUR DATABASE RUNNING???")
         }
         
     }
@@ -51,21 +52,37 @@ class ConnectionTester
                 
                 if let ipString = String(data: OpenVPNController.sharedInstance!.lastIP, encoding: String.Encoding.utf8)
                 {
-                    //Probe ASN is a required field for Ooni reporting.
-                    if let (probeASN, probeCC) = getProbeInfo(ipString: ipString, severName: serverName) as? (String, String)
+//                    //Probe ASN is a required field for Ooni reporting.
+//                    if let (probeASN, probeCC) = getProbeInfo(ipString: ipString, severName: serverName) as? (String, String)
+//                    {
+//                        ///Connection Test
+//                        let connectionTest = ConnectionTest()
+//                        let success = connectionTest.run()
+//                        
+//                        ///Generate Test Result
+//                        result = TestResult.init(serverName: serverName, testDate: Date(), transport: transport, success: success, probeASN: probeASN, probeCC: probeCC)
+//                    }
+//                    else
+//                    {
+//                        print("FAILED TO RUN TEST:")
+//                        print("Unable to get probe ASN")
+//                    }
+                    
+                    ///Connection Test
+                    let connectionTest = ConnectionTest()
+                    let success = connectionTest.run()
+                    
+                    ///Generate Test Result
+                    if let country = DatabaseController.sharedInstance.queryForServerCountry(serverName: self.serverName)
                     {
-                        ///Connection Test
-                        let connectionTest = ConnectionTest()
-                        let success = connectionTest.run()
-                        
-                        ///Generate Test Result
-                        result = TestResult.init(serverName: serverName, testDate: Date(), transport: transport, success: success, probeASN: probeASN, probeCC: probeCC)
+                        result = TestResult.init(serverName: serverName, testDate: Date(), transport: transport, success: success, probeASN: "--", probeCC: country.code)
                     }
                     else
                     {
-                        print("FAILED TO RUN TEST:")
-                        print("Unable to get probe ASN")
+                        print("FAILED TO RUN TEST, IS THE DATABASE RUNNING?")
                     }
+                    
+                    
                 }
                 else
                 {
@@ -177,7 +194,7 @@ class ConnectionTest
             }
             catch
             {
-                print("💔  We could not connect to \(testWebAddress): \(error). 💔")
+                print("💔  We could not connect to \(testWebAddress): \(error.localizedDescription). 💔")
                 return false
             }
         }

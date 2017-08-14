@@ -1,0 +1,34 @@
+2017/08/14 14:08:26 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/08/14 14:08:26 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/08/14 14:08:26 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/08/14 14:08:26 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/08/14 14:08:26 [INFO]: -shadowsocks - registered listener: 127.0.0.1:1234
+2017/08/14 14:08:26 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/08/14 14:08:57 [ERROR]: Unknown transport: -shadowsocks
+2017/08/14 14:31:38 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/08/14 14:31:38 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/08/14 14:31:38 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/08/14 14:31:38 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/08/14 14:31:38 [INFO]: -shadow - registered listener: 127.0.0.1:1234
+2017/08/14 14:31:38 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/08/14 14:32:39 [ERROR]: Unknown transport: -shadow
+2017/08/14 14:33:24 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/08/14 14:33:24 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/08/14 14:33:24 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/08/14 14:33:24 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/08/14 14:33:24 [INFO]: shadow - registered listener: 127.0.0.1:1234
+2017/08/14 14:33:24 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/08/14 14:33:28 [ERROR]: shadow transport missing cipher argument: map[password:[1234] cipher:[chacha20-ietf]]
+2017/08/14 14:34:01 [ERROR]: shadow transport missing cipher argument: map[cipher:[chacha20-ietf] password:[1234]]
+2017/08/14 14:35:33 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/08/14 14:35:33 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/08/14 14:35:33 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/08/14 14:35:33 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/08/14 14:35:33 [INFO]: shadow - registered listener: 127.0.0.1:1234
+2017/08/14 14:35:33 [INFO]: shapeshifter-dispatcher - accepting connections
+2017/08/14 14:35:40 [INFO]: shadow(198.211.106.85:2345) - closed connection
+2017/08/14 15:06:14 [NOTICE]: dispatcher-0.0.7-dev - launched
+2017/08/14 15:06:14 [INFO]: shapeshifter-dispatcher - initializing transparent proxy
+2017/08/14 15:06:14 [INFO]: shapeshifter-dispatcher - initializing TCP transparent proxy
+2017/08/14 15:06:14 [INFO]: shapeshifter-dispatcher - initializing client transport listeners
+2017/08/14 15:06:14 [ERROR]: shapeshifter-dispatcher - transparent mode requires a target

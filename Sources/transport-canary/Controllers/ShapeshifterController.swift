@@ -25,7 +25,7 @@ class ShapeshifterController
     {
         if let arguments = shapeshifterArguments(forTransport: transport)
         {
-            //print("👀 LaunchShapeShifterDispatcher Args:\n \(arguments.joined(separator: "\n")) 👀")
+            print("👀 LaunchShapeShifterDispatcher Args:\n \(arguments.joined(separator: "\n")) 👀")
             
             if launchTask == nil
             {
@@ -133,12 +133,15 @@ class ShapeshifterController
                 
                 //Here is our list of transports (more than one would launch multiple proxies)
                 processArguments.append("-transports")
-                processArguments.append(transport)
                 
-                /// -bindaddr string
-                //Specify the bind address for transparent server
-                processArguments.append("-bindaddr")
-                processArguments.append("obfs4-127.0.0.1:1234")
+                if transport == shadowsocks
+                {
+                    processArguments.append("shadow")
+                }
+                else
+                {
+                    processArguments.append(transport)
+                }
                 
                 //This should use generic options based on selected transport
                 //Paramaters needed by the specific transport being used
