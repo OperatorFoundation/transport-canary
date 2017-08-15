@@ -23,7 +23,7 @@ struct TestResult
     var success = false
     
     ///The server's ASN based on whois query.
-    var probeASN: String
+    var probeASN: String?
     
     ///The country code for the server.
     var probeCC: String

@@ -12,92 +12,108 @@ class ConnectionTester
 {
     let configDirectoryPath = "Resources/config"
     let openVPNExecutablePath = "Resources/openvpn"
-    var serverName: String
+    var serverName: String = "Local Test"
     var configFileName: String?
     
-    init(configFileName: String)
+    init(configFileName: String?)
     {
-        self.configFileName = configFileName
-        self.serverName = configFileName.replacingOccurrences(of: "-tcp.ovpn", with: "")
-        
-        if let country = DatabaseController.sharedInstance.queryForServerCountry(serverName: self.serverName)
+        if let configFileName = configFileName
         {
-            let flag = country.emojiFlag
-            print("\(flag) \(flag) \(flag) \(flag)  Testing \(self.serverName) \(flag) \(flag) \(flag) \(flag)")
+            self.configFileName = configFileName
+            self.serverName = configFileName.replacingOccurrences(of: "-tcp.ovpn", with: "")
+            if let country = DatabaseController.sharedInstance.queryForServerCountry(serverName: self.serverName)
+            {
+                let flag = country.emojiFlag
+                print("\(flag) \(flag) \(flag) \(flag)  Testing \(self.serverName) \(flag) \(flag) \(flag) \(flag)")
+            }
+            else
+            {
+                print("💥💥💥💥💥💥  Testing \(self.serverName) 💥💥💥💥💥")
+                print("IS YOUR DATABASE RUNNING???")
+            }
         }
-        else
-        {
-            print("💥💥💥💥💥💥  Testing \(self.serverName) 💥💥💥💥💥")
-            print("IS YOUR DATABASE RUNNING???")
-        }
-        
     }
     
     func runTest(forTransport transport: String) -> TestResult?
     {
-        //If no config file run this without launching or cleaning up openvpn
-        
-        //Config File
-        let configPath = configDirectoryPath + "/\(configFileName)"
         var result: TestResult?
-        /// OpenVPN
-        if OpenVPNController.sharedInstance != nil
+        
+        //If no config file run this without launching or cleaning up openvpn
+        if configFileName != nil
         {
-            let connectedToOVPN = OpenVPNController.sharedInstance!.startOpenVPN(openVPNFilePath: self.openVPNExecutablePath, configFilePath: configPath)
+            //Config File
+            let configPath = configDirectoryPath + "/\(configFileName!)"
             
-            if connectedToOVPN
+            /// OpenVPN
+            if OpenVPNController.sharedInstance != nil
             {
-                ///ShapeShifter
-                ShapeshifterController.sharedInstance.launchShapeshifterClient(forTransport: transport)
+                let connectedToOVPN = OpenVPNController.sharedInstance!.startOpenVPN(openVPNFilePath: self.openVPNExecutablePath, configFilePath: configPath)
                 
-                sleep(1)
-                
-                if let ipString = String(data: OpenVPNController.sharedInstance!.lastIP, encoding: String.Encoding.utf8)
+                if connectedToOVPN
                 {
-//                    //Probe ASN is a required field for Ooni reporting.
-//                    if let (probeASN, probeCC) = getProbeInfo(ipString: ipString, severName: serverName) as? (String, String)
-//                    {
-//                        ///Connection Test
-//                        let connectionTest = ConnectionTest()
-//                        let success = connectionTest.run()
-//                        
-//                        ///Generate Test Result
-//                        result = TestResult.init(serverName: serverName, testDate: Date(), transport: transport, success: success, probeASN: probeASN, probeCC: probeCC)
-//                    }
-//                    else
-//                    {
-//                        print("FAILED TO RUN TEST:")
-//                        print("Unable to get probe ASN")
-//                    }
+                    ///ShapeShifter
+                    ShapeshifterController.sharedInstance.launchShapeshifterClient(forTransport: transport)
                     
-                    ///Connection Test
-                    let connectionTest = ConnectionTest()
-                    let success = connectionTest.run()
+                    sleep(1)
                     
-                    ///Generate Test Result
-                    if let country = DatabaseController.sharedInstance.queryForServerCountry(serverName: self.serverName)
+                    var probeASN: String?
+                    var probeCC = ""
+                    
+                    if let ipString = String(data: OpenVPNController.sharedInstance!.lastIP, encoding: String.Encoding.utf8)
                     {
-                        result = TestResult.init(serverName: serverName, testDate: Date(), transport: transport, success: success, probeASN: "--", probeCC: country.code)
+                        //Probe ASN is a required field for Ooni reporting.
+                        if let (asn, cc) = getProbeInfo(ipString: ipString, severName: serverName) as? (String, String)
+                        {
+                            probeASN = asn
+                            probeCC = cc
+                        }
+                        else
+                        {
+                            print("Unable to get probe ASN")
+                            
+                            ///Generate Test Result
+                            if let country = DatabaseController.sharedInstance.queryForServerCountry(serverName: self.serverName)
+                            {
+                                probeCC = country.code
+                            }
+                            else
+                            {
+                                print("FAILED TO GET COUNTRY CODE, IS THE DATABASE RUNNING?")
+                            }
+                        }
+                        
+                        ///Connection Test
+                        let connectionTest = ConnectionTest()
+                        let success = connectionTest.run()
+                        
+                        result = TestResult.init(serverName: serverName, testDate: Date(), transport: transport, success: success, probeASN: probeASN, probeCC: probeCC)
                     }
                     else
                     {
-                        print("FAILED TO RUN TEST, IS THE DATABASE RUNNING?")
+                        print("FAILED TO RUN TEST:")
+                        print("Unable to get probe ASN - unable to resolve server IP")
                     }
-                    
-                    
                 }
                 else
                 {
-                    print("FAILED TO RUN TEST:")
-                    print("Unable to get probe ASN - unable to resolve server IP")
+                    print("Failed to connect to openVPN")
                 }
             }
-            else
-            {
-                print("Failed to connect to openVPN")
-            }
         }
-        
+        else
+        {
+            //This is a test to verify that the given transport server is running, open vpn servers are not used here
+            
+            ///ShapeShifter
+            ShapeshifterController.sharedInstance.launchShapeshifterClient(forTransport: transport)
+            
+            ///Connection Test
+            let connectionTest = ConnectionTest()
+            let success = connectionTest.run()
+            
+            result = TestResult.init(serverName: serverName, testDate: Date(), transport: transport, success: success, probeASN: "--", probeCC: "--")
+        }
+
         ///Cleanup
         print("🛁  🛁  🛁  🛁  Cleanup! 🛁  🛁  🛁  🛁")
         OpenVPNController.sharedInstance!.stopOpenVPN()
