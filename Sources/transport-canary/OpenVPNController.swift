@@ -184,9 +184,6 @@ class OpenVPNController
         //Arguments will pass the arguments to the executable, as though typed directly into terminal.
         OpenVPNController.connectTask.arguments = arguments
         
-        print("OpenVPN Arguments2:\n\(arguments)")
-        print("Launch path: \(path)")
-        
         //Go ahead and launch the process/task
         //OpenVPNController.connectTask.launch()
         

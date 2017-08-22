@@ -12,6 +12,92 @@ class BatchTestController
 {
     static let sharedInstance = BatchTestController()
     
+//    func runAllTests(forTransport transport: String)
+//    {
+//        //AdversaryLabController.sharedInstance.launchAdversaryLab(forTransport: transport)
+//        
+//        //Kills all openVPN connections on the system before begining the test loop.
+//        if OpenVPNController.sharedInstance != nil
+//        {
+//            killAll(processToKill: "openvpn")
+//        }
+//        
+//        //Run this with a tester that has a nil config file
+//        //We want to know if our transport server is working before getting oVPN involved and running a whole batch of tests.
+//        let controlTester = ConnectionTester.init(configFileName: nil)
+//        controlTester.runTest(forTransport: transport)
+//        {
+//            (maybeResult) in
+//            
+//            if let controlTestResult = maybeResult
+//            {
+//                //Only proceed if the control test was successful.
+//                if controlTestResult.success
+//                {
+//                    do
+//                    {
+//                        try configs.forEachEntry(closure:
+//                        {
+//                            config in
+//                            
+//                            //                if first
+//                            //                {
+//                            //                    first = false
+//                            //                }
+//                            //                else
+//                            //                {
+//                            //                    return
+//                            //                }
+//                            
+//                            let tester = ConnectionTester.init(configFileName: config)
+//                            tester.runTest(forTransport: transport, completion:
+//                            {
+//                                (maybeTestResult) in
+//                                
+//                                if let testResult = maybeTestResult
+//                                {
+//                                    let addRecordSuccess = DatabaseController.sharedInstance.insert(testResult: testResult)
+//                                    
+//                                    print("Added to database = \(addRecordSuccess)")
+//                                    
+//                                    //Ooni Reporting
+//                                    self.reportToOoni(testResult: testResult)
+//                                    
+//                                    
+//                                    if testResult.success
+//                                    {
+//                                        print("⭐️Test succeeded for \(testResult.serverName) using \(testResult.transport)⭐️")
+//                                    }
+//                                    else if testResult.success == false
+//                                    {
+//                                        print("👉 \(testResult.serverName) ")
+//                                        print("☠️ Failed the test for \(testResult.transport) ☠️")
+//                                        
+//                                    }
+//                                }
+//                                else
+//                                {
+//                                    print("👿The following server could not be tested👿:\n\(config))")
+//                                }
+//                            })
+//                        })
+//                        
+//                        DatabaseController.sharedInstance.queryForServerInfo()
+//                    }
+//                    catch
+//                    {
+//                        print(error)
+//                    }
+//                }
+//                else
+//                {
+//                    print("Will not test for \(transport) as there was a problem running the test locally.")
+//                }
+//            }
+//        }
+//        
+//    }
+    
     func runAllTests(forTransport transport: String)
     {
         //AdversaryLabController.sharedInstance.launchAdversaryLab(forTransport: transport)
@@ -31,9 +117,9 @@ class BatchTestController
         let controlTester = ConnectionTester.init(configFileName: nil)
         if let controlTestResult = controlTester.runTest(forTransport: transport)
         {
-            //Only proceed if the control test was successful.
-            if controlTestResult.success
-            {
+//            //Only proceed if the control test was successful.
+//            if controlTestResult.success
+//            {
                 do
                 {
                     try configs.forEachEntry(closure:
@@ -104,11 +190,11 @@ class BatchTestController
                 {
                     print(error)
                 }
-            }
-            else
-            {
-                print("Will not test for \(transport) as there was a problem running the test locally.")
-            }
+//            }
+//            else
+//            {
+//                print("Will not test for \(transport) as there was a problem running the test locally.")
+//            }
         }
     }
     

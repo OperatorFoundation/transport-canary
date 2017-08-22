@@ -71,14 +71,14 @@ struct SyncSocket
             dispatchGroup.enter()
             
             self.sessionTask.readData(ofMinLength: 1, maxLength: 4096, timeout: 20, completionHandler:
-                {
-                    (maybeData, endOF, maybeError) in
-                    
-                    resultData=maybeData
-                    resultEof=endOF
-                    resultError=maybeError
-                    
-                    dispatchGroup.leave()
+            {
+                (maybeData, endOF, maybeError) in
+                
+                resultData=maybeData
+                resultEof=endOF
+                resultError=maybeError
+                
+                dispatchGroup.leave()
             })
             
             dispatchGroup.wait()

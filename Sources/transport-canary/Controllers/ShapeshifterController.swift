@@ -25,7 +25,7 @@ class ShapeshifterController
     {
         if let arguments = shapeshifterArguments(forTransport: transport)
         {
-            print("👀 LaunchShapeShifterDispatcher Args:\n \(arguments.joined(separator: "\n")) 👀")
+            print("👀 LaunchShapeShifterDispatcher Args:\n \(arguments))")
             
             if launchTask == nil
             {
@@ -84,7 +84,7 @@ class ShapeshifterController
             
             do
             {
-                let serverIP = try String(contentsOfFile: serverIPFilePath, encoding: String.Encoding.ascii)
+                let serverIP = try String(contentsOfFile: serverIPFilePath, encoding: String.Encoding.ascii).replacingOccurrences(of: "\n", with: "")
                 
                 //List of arguments for Process/Task
                 var processArguments: [String] = []
@@ -114,7 +114,7 @@ class ShapeshifterController
                     //If shSocks use special port and IP
                     do
                     {
-                        let shSocksServerIP = try String(contentsOfFile: shSocksServerIPFilePath, encoding: String.Encoding.ascii)
+                        let shSocksServerIP = try String(contentsOfFile: shSocksServerIPFilePath, encoding: String.Encoding.ascii).replacingOccurrences(of: "\n", with: "")
                         processArguments.append("-target")
                         processArguments.append("\(shSocksServerIP):\(shsocksServerPort)")
                     }
@@ -188,7 +188,8 @@ class ShapeshifterController
         do
         {
             let meekOptionsData = try Data(contentsOf: URL(fileURLWithPath: meekOptionsPath, isDirectory: false), options: .uncached)
-            let meekOptions = String(data: meekOptionsData, encoding: String.Encoding.ascii)
+            let rawOptions = String(data: meekOptionsData, encoding: String.Encoding.ascii)
+            let meekOptions = rawOptions?.replacingOccurrences(of: "\n", with: "")
             return meekOptions
         }
         catch
@@ -203,7 +204,8 @@ class ShapeshifterController
         do
         {
             let obfs4OptionsData = try Data(contentsOf: URL(fileURLWithPath: obfs4OptionsPath, isDirectory: false), options: .uncached)
-            let obfs4Options = String(data: obfs4OptionsData, encoding: String.Encoding.ascii)
+            let rawOptions = String(data: obfs4OptionsData, encoding: String.Encoding.ascii)
+            let obfs4Options = rawOptions?.replacingOccurrences(of: "\n", with: "")
             return obfs4Options
         }
         catch
@@ -218,7 +220,8 @@ class ShapeshifterController
         do
         {
             let shSocksOptionsData = try Data(contentsOf: URL(fileURLWithPath: shSocksOptionsPath, isDirectory: false) , options: .uncached)
-            let shSocksOptions = String(data: shSocksOptionsData, encoding: String.Encoding.ascii)
+            let rawOptions = String(data: shSocksOptionsData, encoding: String.Encoding.ascii)
+            let shSocksOptions = rawOptions?.replacingOccurrences(of: "\n", with: "")
             return shSocksOptions
         }
         catch
