@@ -555,7 +555,7 @@ class DatabaseController
         _ = insertServerInfo("Japan,Tokyo2", 2, "JP", "Japan", "Tokyo", "Kantō")
         _ = insertServerInfo("Japan,Tokyo3", 3, "JP", "Japan", "Tokyo", "Kantō")
         _ = insertServerInfo("Jordan", 1, "JO","Jordan", nil, nil)
-        _ = insertServerInfo("Kazakhstan", 1, "KZ","Kazakhstan", nil, nil)
+        _ = insertServerInfo("Kazakhstan", 1, "KZ","Kazakhstan", "Almaty", nil)
         _ = insertServerInfo("Kenya", 1, "KE","Kenya", nil, nil)
         _ = insertServerInfo("Korea,Seoul1", 1, "KR","South Korea", "Seoul", "Seoul National Capital Area")
         _ = insertServerInfo("Korea,Seoul2", 2, "KR", "South Korea", "Seoul", "Seoul National Capital Area")

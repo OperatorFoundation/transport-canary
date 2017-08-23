@@ -100,8 +100,6 @@ class BatchTestController
     
     func runAllTests(forTransport transport: String)
     {
-        //AdversaryLabController.sharedInstance.launchAdversaryLab(forTransport: transport)
-        
         //Kills all openVPN connections on the system before begining the test loop.
         if OpenVPNController.sharedInstance != nil
         {
@@ -120,6 +118,8 @@ class BatchTestController
 //            //Only proceed if the control test was successful.
 //            if controlTestResult.success
 //            {
+                AdversaryLabController.sharedInstance.launchAdversaryLab(forTransport: transport)
+            
                 do
                 {
                     try configs.forEachEntry(closure:
@@ -164,23 +164,23 @@ class BatchTestController
                     
                     if serversNotTested.isEmpty
                     {
-                        print("⭐️All available servers have been tested.⭐️")
+                        print("⭐️  All available servers have been tested. ⭐️")
                     }
                     else
                     {
-                        print("👿The following servers could not be tested👿:\n\(serversNotTested.joined(separator: "\n👉"))")
+                        print("👿  The following servers could not be tested 👿  :\n\(serversNotTested.joined(separator: "\n👉"))")
                     }
                     
                     if failedTests.isEmpty
                     {
-                        print("💫All tests have succeeded!💫")
+                        print("💫  All tests have succeeded! 💫")
                     }
                     else
                     {
-                        print("☠️The following servers failed the test☠️:")
+                        print("☠️  The following servers failed the test ☠️  :")
                         for test in failedTests
                         {
-                            print("👉 \(test.serverName) for \(test.transport)")
+                            print("👉  \(test.serverName) for \(test.transport)")
                         }
                     }
                     
@@ -190,6 +190,8 @@ class BatchTestController
                 {
                     print(error)
                 }
+            
+                AdversaryLabController.sharedInstance.stopAdversaryLab()
 //            }
 //            else
 //            {
