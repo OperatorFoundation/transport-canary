@@ -220,6 +220,8 @@ class ConnectionTester
             ///ShapeShifter
             ShapeshifterController.sharedInstance.launchShapeshifterClient(forTransport: transport)
             
+            sleep(10)
+            
             ///Connection Test
             let connectionTest = ConnectionTest()
             let success = connectionTest.run()

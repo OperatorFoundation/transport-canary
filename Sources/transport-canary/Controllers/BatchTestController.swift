@@ -115,9 +115,9 @@ class BatchTestController
         let controlTester = ConnectionTester.init(configFileName: nil)
         if let controlTestResult = controlTester.runTest(forTransport: transport)
         {
-//            //Only proceed if the control test was successful.
-//            if controlTestResult.success
-//            {
+            //Only proceed if the control test was successful.
+            if controlTestResult.success
+            {
                 AdversaryLabController.sharedInstance.launchAdversaryLab(forTransport: transport)
             
                 do
@@ -192,11 +192,11 @@ class BatchTestController
                 }
             
                 AdversaryLabController.sharedInstance.stopAdversaryLab()
-//            }
-//            else
-//            {
-//                print("Will not test for \(transport) as there was a problem running the test locally.")
-//            }
+            }
+            else
+            {
+                print("Will not test for \(transport) as there was a problem running the test locally.")
+            }
         }
     }
     

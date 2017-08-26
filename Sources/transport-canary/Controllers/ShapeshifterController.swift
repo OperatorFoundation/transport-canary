@@ -98,6 +98,10 @@ class ShapeshifterController
                 if transport == meek
                 {
                     options = getMeekOptions()
+                    
+                    //Dummy data to get around meek server bug
+                    processArguments.append("-target")
+                    processArguments.append("127.0.0.1:123")
                 }
                 else if transport == obfs4
                 {
@@ -137,6 +141,10 @@ class ShapeshifterController
                 if transport == shadowsocks
                 {
                     processArguments.append("shadow")
+                }
+                else if transport == meek
+                {
+                        processArguments.append("meeklite")
                 }
                 else
                 {
