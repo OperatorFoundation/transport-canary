@@ -112,12 +112,12 @@ class OperatorReportingController
                 }
                 else
                 {
-                    untestedCountries.append("\n \(thisCountry.emojiFlag) \(thisCountry.name) \(thisCountry.emojiFlag)\n")
+                    untestedCountries.append("\(thisCountry.emojiFlag) \(thisCountry.name) \(thisCountry.emojiFlag)")
                 }
             }
             
             let countryTablesString = countryTables.joined()
-            let untestedCountriesString = "\n### Untested:\n" + untestedCountries.joined()
+            let untestedCountriesString = "\n### Untested:\n" + untestedCountries.joined(separator: ", ")
             return reportHeader + reportDate + countryTablesString + untestedCountriesString
         }
         else
