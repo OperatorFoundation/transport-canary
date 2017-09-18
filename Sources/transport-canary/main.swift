@@ -39,9 +39,9 @@ OpenVPNController.sharedInstance!.fixTheInternet()
 //Now we are running the things. Hooray!
 AdversaryLabController.sharedInstance.launchAdversaryLabServer()
 
-BatchTestController.sharedInstance.runAllTests(forTransport: obfs4)
+//BatchTestController.sharedInstance.runAllTests(forTransport: obfs4)
 
-BatchTestController.sharedInstance.runAllTests(forTransport: meek)
+//BatchTestController.sharedInstance.runAllTests(forTransport: meek)
 
 BatchTestController.sharedInstance.runAllTests(forTransport: shadowsocks)
 
