@@ -37,17 +37,10 @@ AdversaryLabController.sharedInstance.stopAdversaryLab()
 OpenVPNController.sharedInstance!.fixTheInternet()
 
 //Now we are running the things. Hooray!
-
-let testResult = TestResult(serverName: "TestServer", testDate: Date(), transport: "OperatorTest", success: true, probeASN: "AS35017", probeCC: "US")
-BatchTestController.sharedInstance.reportToOoni(testResult: testResult)
-
-
 AdversaryLabController.sharedInstance.launchAdversaryLabServer()
 
 //BatchTestController.sharedInstance.runAllTests(forTransport: obfs4)
-
 //BatchTestController.sharedInstance.runAllTests(forTransport: meek)
-
 BatchTestController.sharedInstance.runAllTests(forTransport: shadowsocks)
 
 AdversaryLabController.sharedInstance.stopAdversaryLabServer()

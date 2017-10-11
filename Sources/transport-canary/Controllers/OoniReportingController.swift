@@ -197,7 +197,7 @@ class OoniReportingController
         }
         catch
         {
-            print("Response from server was not a valid JSON object.")
+            print("Response from server was not a valid JSON object: \(responseData.debugDescription)")
             completionHandler(nil)
         }
     }
