@@ -1,0 +1,34 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "PerfectLib",
+        "repositoryURL": "https://github.com/PerfectlySoft/PerfectLib.git",
+        "state": {
+          "branch": null,
+          "revision": "e85a9ead840f80dfd85ca90627cf88cfb6e0cb59",
+          "version": "2.0.11"
+        }
+      },
+      {
+        "package": "PostgreSQL",
+        "repositoryURL": "https://github.com/PerfectlySoft/Perfect-PostgreSQL.git",
+        "state": {
+          "branch": null,
+          "revision": "bc26ca996260a3cdfd135b7c98cefe5222101ba0",
+          "version": "2.0.2"
+        }
+      },
+      {
+        "package": "libpq",
+        "repositoryURL": "https://github.com/PerfectlySoft/Perfect-libpq.git",
+        "state": {
+          "branch": null,
+          "revision": "8b8ff3ceff9af35d9fa4da1f3a93e77dabfcc095",
+          "version": "2.0.1"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

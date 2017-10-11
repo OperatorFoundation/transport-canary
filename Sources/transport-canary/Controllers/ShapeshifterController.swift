@@ -25,7 +25,7 @@ class ShapeshifterController
     {
         if let arguments = shapeshifterArguments(forTransport: transport)
         {
-            print("👀 LaunchShapeShifterDispatcher Args:\n \(arguments))")
+            //print("👀 LaunchShapeShifterDispatcher Args:\n \(arguments))")
             
             if launchTask == nil
             {

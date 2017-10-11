@@ -110,6 +110,8 @@ class BatchTestController
         var successfulTests = [TestResult]()
         var serversNotTested = [String]()
         
+        let _ = DatabaseController.sharedInstance
+        
         //Run this with a tester that has a nil config file
         //We want to know if our transport server is working before getting oVPN involved and running a whole batch of tests.
         let controlTester = ConnectionTester.init(configFileName: nil)
@@ -119,7 +121,6 @@ class BatchTestController
             if controlTestResult.success
             {
                 AdversaryLabController.sharedInstance.launchAdversaryLab(forTransport: transport)
-            
                 do
                 {
                     try configs.forEachEntry(closure:
@@ -143,8 +144,7 @@ class BatchTestController
                             print("Added to database = \(addRecordSuccess)")
                             
                             //Ooni Reporting
-                            reportToOoni(testResult: testResult)
-                            
+                            self.reportToOoni(testResult: testResult)
                             
                             if testResult.success
                             {
@@ -202,6 +202,7 @@ class BatchTestController
     
     func reportToOoni(testResult: TestResult)
     {
+        print("🐙  Attempting to send a report to Ooni. 🐙")
         //Create a new report:
         if let newReport = OoniNewReportRequest(testResult: testResult)
         {

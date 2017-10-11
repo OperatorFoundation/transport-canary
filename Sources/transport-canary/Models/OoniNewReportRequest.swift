@@ -85,7 +85,7 @@ class OoniNewReportRequest: CustomStringConvertible
         if testResult.probeASN != nil
         {
             self.probeASN = testResult.probeASN!
-            self.testName = "Test Transport Canary - \(testResult.transport)"
+            self.testName = "test_transport_canary-\(testResult.transport)"
             self.testVersion = "0.1"
             self.probeCC = testResult.probeCC
             
@@ -101,8 +101,8 @@ class OoniNewReportRequest: CustomStringConvertible
             self.testHelper = nil
             self.probeIP = nil
             
-            //print("📝 📝 📝  Created a new report request for Ooni reporting: 📝 📝 📝")
-            //print(self)
+            print("📝 📝 📝  Created a new report request for Ooni reporting: 📝 📝 📝")
+            print(self)
         }
         else
         {

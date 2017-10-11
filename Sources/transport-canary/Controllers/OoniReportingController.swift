@@ -11,8 +11,8 @@ import Foundation
 class OoniReportingController
 {
     static let sharedInstance = OoniReportingController()
-    
-    let ooniURLString = "http://192.34.59.32:10080/" //"https://b.collector.ooni.io/"
+    let ooniURLString = "https://b.collector.ooni.io/"
+    //let ooniURLString = "http://192.34.59.32:10080/"
     let session = URLSession(configuration: .default)
     var dataTask: URLSessionDataTask? = nil
     
@@ -25,6 +25,7 @@ class OoniReportingController
     {
         //RequestDictionary should be gotten via OoniNewReportRequest requestDictioanry property.
         let reportURLString = "\(ooniURLString)report"
+        print("Ooni create report url path: \(reportURLString)")
         print("📤  Sending New Report Request to: \(reportURLString)")
         print("📦  Request body: \(requestDictionary)")
         guard let url = URL(string: reportURLString)
@@ -35,6 +36,7 @@ class OoniReportingController
             return
         }
         
+        print("Sending request to: \(url.debugDescription)")
         performRequest(requestURL: url, method: POST, body: requestDictionary)
         {
             (maybeResponse) in
@@ -145,6 +147,7 @@ class OoniReportingController
         {
             (maybeData, maybeURLResponse, maybeError) in
             
+            print("Sending request to: \(requestURL.debugDescription)")
             if let error = maybeError
             {
                 print("Error with http data task: \(error.localizedDescription)")

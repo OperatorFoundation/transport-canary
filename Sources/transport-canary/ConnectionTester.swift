@@ -351,10 +351,10 @@ class ConnectionTest
                 print("Unable to connect to test web address.")
             }
             
-            if let urlResponse = taskResponse
-            {
-                print("Received a url response from our test web address: \(urlResponse)")
-            }
+//            if let urlResponse = taskResponse
+//            {
+//                print("Received a url response from our test web address: \(urlResponse)")
+//            }
             
             if let error = taskError
             {

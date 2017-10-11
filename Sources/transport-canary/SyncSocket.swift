@@ -163,8 +163,8 @@ struct SyncSocket
             {
                 buffer.append(s)
                 (prefix, buffer) = buffer.slice(delim)
-                print("PREFIX: 🔶  \(String(describing: prefix)) 🔶")
-                print("REMAINING BUFFER: 🔷  \(buffer) 🔷")
+                //print("PREFIX: 🔶  \(String(describing: prefix)) 🔶")
+                //print("REMAINING BUFFER: 🔷  \(buffer) 🔷")
             }
             else
             {
@@ -175,7 +175,7 @@ struct SyncSocket
         if prefix == nil
         {
             // Must be an EOF
-            print("🛑  EOF 🛑")
+            //print("🛑  EOF 🛑")
             return (nil, eof, nil, buffer)
         }
         else
