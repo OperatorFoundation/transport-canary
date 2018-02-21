@@ -187,14 +187,7 @@ class OpenVPNController
         //Go ahead and launch the process/task
         //OpenVPNController.connectTask.launch()
         
-        do
-        {
-            try OpenVPNController.connectTask.launch()
-        }
-        catch
-        {
-            print("Error launching openvpn: \(error.localizedDescription)")
-        }
+        OpenVPNController.connectTask.launch()
     }
     
     func connectToManagement() -> Bool

@@ -298,7 +298,6 @@ class ConnectionTest
         if let url = URL(string: testWebAddress)
         {
             var taskData: Data?
-            var taskResponse: URLResponse?
             var taskError: Error?
             
             let queue = OperationQueue()
@@ -314,7 +313,6 @@ class ConnectionTest
                     (maybeData, maybeResponse, maybeError) in
                     
                     taskData = maybeData
-                    taskResponse = maybeResponse
                     taskError = maybeError
                     
                     dispatchGroup.leave()

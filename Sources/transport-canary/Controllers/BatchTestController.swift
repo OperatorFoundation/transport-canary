@@ -248,7 +248,7 @@ class BatchTestController
                                         {
                                             //TODO: Update DB
                                             print("Close Ooni Report response: \(closeResponseDictionary)")
-                                            var closed = false
+                                            let closed = false
                                             
                                             let addedReportStatusToDB = DatabaseController.sharedInstance.insert(reportClosedStatus: closed, serverName: testResult.serverName)
                                             
