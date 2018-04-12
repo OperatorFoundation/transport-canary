@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import PostgreSQL
+import PerfectPostgreSQL
 
 class DatabaseController
 {

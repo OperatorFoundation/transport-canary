@@ -2,21 +2,12 @@
   "object": {
     "pins": [
       {
-        "package": "PerfectLib",
-        "repositoryURL": "https://github.com/PerfectlySoft/PerfectLib.git",
+        "package": "PerfectCRUD",
+        "repositoryURL": "https://github.com/PerfectlySoft/Perfect-CRUD.git",
         "state": {
           "branch": null,
-          "revision": "e85a9ead840f80dfd85ca90627cf88cfb6e0cb59",
-          "version": "2.0.11"
-        }
-      },
-      {
-        "package": "PostgreSQL",
-        "repositoryURL": "https://github.com/PerfectlySoft/Perfect-PostgreSQL.git",
-        "state": {
-          "branch": null,
-          "revision": "bc26ca996260a3cdfd135b7c98cefe5222101ba0",
-          "version": "2.0.2"
+          "revision": "509f1f9849f49743a2cca2656fc7b5858bff9f2f",
+          "version": "1.0.2"
         }
       },
       {
@@ -26,6 +17,24 @@
           "branch": null,
           "revision": "8b8ff3ceff9af35d9fa4da1f3a93e77dabfcc095",
           "version": "2.0.1"
+        }
+      },
+      {
+        "package": "PerfectPostgreSQL",
+        "repositoryURL": "https://github.com/PerfectlySoft/Perfect-PostgreSQL.git",
+        "state": {
+          "branch": null,
+          "revision": "9bcbfec4eccadb5f414fd2f3c8727f9dad24ad2f",
+          "version": "3.1.0"
+        }
+      },
+      {
+        "package": "PerfectLib",
+        "repositoryURL": "https://github.com/PerfectlySoft/PerfectLib.git",
+        "state": {
+          "branch": null,
+          "revision": "718432e78c1ce361fe922eea4810130fc72e2191",
+          "version": "3.0.4"
         }
       }
     ]

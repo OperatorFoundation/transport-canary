@@ -5,7 +5,7 @@ let package = Package(
     name: "transport-canary",
     targets: [],
     dependencies: [
-        .Package(url: "https://github.com/PerfectlySoft/PerfectLib.git", majorVersion: 2),
-        .Package(url: "https://github.com/PerfectlySoft/Perfect-PostgreSQL.git", majorVersion: 2),
+        .Package(url: "https://github.com/PerfectlySoft/PerfectLib.git", majorVersion: 3),
+        .Package(url: "https://github.com/PerfectlySoft/Perfect-PostgreSQL.git", majorVersion: 3),
     ]
 )
