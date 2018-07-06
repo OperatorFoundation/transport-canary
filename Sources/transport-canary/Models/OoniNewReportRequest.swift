@@ -91,7 +91,7 @@ class OoniNewReportRequest: CustomStringConvertible
             
             //Submit date as string in format requested by Ooni
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "Y-m-d H:M:S"
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             dateFormatter.locale = Locale(identifier: "en_US_POSIX")
             let ooniDateString = dateFormatter.string(from: testResult.testDate)
             self.testStartTime = ooniDateString
