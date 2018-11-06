@@ -143,9 +143,6 @@ class BatchTestController
                             
                             print("Added to database = \(addRecordSuccess)")
                             
-                            //Ooni Reporting
-                            self.reportToOoni(testResult: testResult)
-                            
                             if testResult.success
                             {
                                 successfulTests.append(testResult)
@@ -199,81 +196,5 @@ class BatchTestController
             }
         }
     }
-    
-    func reportToOoni(testResult: TestResult)
-    {
-        print("🐙  Attempting to send a report to Ooni. 🐙")
-        //Create a new report:
-        if let newReport = OoniNewReportRequest(testResult: testResult)
-        {
-            OoniReportingController.sharedInstance.createOoniReport(requestDictionary: newReport.requestDictionary, completionHandler:
-            {
-                (maybeResponse) in
-                
-                if let newReportResponse = maybeResponse
-                {
-                    //Add our new report ID to the database record.
-                    let addedReportID = DatabaseController.sharedInstance.insert(ooniReportID: newReportResponse.reportID, serverName: testResult.serverName)
-                    
-                    if addedReportID
-                    {
-                        print("😎 😎 😎  Updated test result record with a new Ooni report ID. 😎 😎 😎")
-                    }
-                    else
-                    {
-                        print("Tried to add a report ID and failed")
-                    }
-                    
-                    //Update the report with the result of the test:
-                    let updateReportRequest = OoniUpdateReportRequest(success: testResult.success)
-                    
-                    OoniReportingController.sharedInstance.updateOoniReport(reportID: newReportResponse.reportID, requestDictionary: updateReportRequest.requestDictionary, completionHandler:
-                    {
-                        (maybeResponseDictionary) in
-                        
-                        if let responseDictionary = maybeResponseDictionary
-                        {
-                            if let status = responseDictionary["status"] as? String
-                            {
-                                if status == "success"
-                                {
-                                    print("Updated Ooni response with test status!")
-                                    
-                                    //Close the report:
-                                    OoniReportingController.sharedInstance.closeOoniReport(reportID: newReportResponse.reportID, completionHandler:
-                                    {
-                                        (maybeCloseResponseDictionary) in
-                                        
-                                        if let closeResponseDictionary = maybeCloseResponseDictionary
-                                        {
-                                            //TODO: Update DB
-                                            print("Close Ooni Report response: \(closeResponseDictionary)")
-                                            let closed = false
-                                            
-                                            let addedReportStatusToDB = DatabaseController.sharedInstance.insert(reportClosedStatus: closed, serverName: testResult.serverName)
-                                            
-                                            if addedReportStatusToDB
-                                            {
-                                                print("Saved report status to the database!")
-                                            }
-                                            else
-                                            {
-                                                print("Unable to save report status to the database.")
-                                            }
-                                        }
-                                    })
-                                }
-                                else
-                                {
-                                    print("Unable to update Ooni response with test status. Request status = \(status)")
-                                }
-                            }
-                        }
-                    })
-                }
-            })
-        }
-    }
-    
     
 }
