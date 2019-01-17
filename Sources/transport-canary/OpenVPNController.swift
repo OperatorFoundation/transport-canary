@@ -15,10 +15,10 @@ class OpenVPNController
     static var connectTask:Process!
     static let findIPURL = URL(string: "https://api.ipify.org/?format=text")!
     
-    let authFilePath = "Resources/auth.up"
-    let certFilePath = "Resources/keys/ca.crt"
-    let keyFilePath = "Resources/keys/Wdc.key"
-    let fixInternetPath = "Resources/fixInternet.sh"
+    var authFilePath = "Resources/auth.up"
+    var certFilePath = "Resources/keys/ca.crt"
+    var keyFilePath = "Resources/keys/Wdc.key"
+    var fixInternetPath = "Resources/fixInternet.sh"
     let verbosity = 6
     let originalIP: Data
     
@@ -36,15 +36,28 @@ class OpenVPNController
     
     init?()
     {
-        if let fetchedIP = OpenVPNController.getCurrentIP()
-        {
-            originalIP = fetchedIP
-            lastIP = fetchedIP
-        }
+        guard let fixPath = Bundle.main.url(forResource: "fixInternet", withExtension: "sh"),
+            let keyPath = Bundle.main.path(forResource: "Wdc", ofType: "key"),
+            let certPath = Bundle.main.path(forResource: "ca", ofType: "crt"),
+            let authPath = Bundle.main.path(forResource: "auth", ofType: "up")
         else
+        {
+            print("\n😮  Unable to initialize OpenVPNController. Missing resource files.\n")
+            return nil
+        }
+        
+        guard let fetchedIP = OpenVPNController.getCurrentIP()
+            else
         {
             return nil
         }
+        
+        fixInternetPath = fixPath.absoluteString
+        keyFilePath = keyPath
+        certFilePath = certPath
+        authFilePath = authPath
+        originalIP = fetchedIP
+        lastIP = fetchedIP
     }
     
     static func getCurrentIP() -> Data?

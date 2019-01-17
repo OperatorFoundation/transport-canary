@@ -3,13 +3,17 @@
 /Packages
 /dispatcher.log
 /.packages_lin
-/Resources/auth.up
 
 *.xcuserstate
-
-TransportState/dispatcher.log
-
+*.ovpn
+*dispatcher.log
+*auth.up
+*.json
+serverIP
+shSocksServerIP
 openVPNLog.txt
+ca.crt
+Wdc.key
 
 transport-canary.xcodeproj/project.xcworkspace/xcuserdata/Lita.xcuserdatad/UserInterfaceState.xcuserstate
 transport-canary.xcodeproj

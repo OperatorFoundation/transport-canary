@@ -12,6 +12,8 @@ class BatchTestController
 {
     static let sharedInstance = BatchTestController()
     
+    
+    
 //    func runAllTests(forTransport transport: String)
 //    {
 //        //AdversaryLabController.sharedInstance.launchAdversaryLab(forTransport: transport)
